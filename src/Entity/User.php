@@ -103,11 +103,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $reviewsTaker;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSenderId")
+     */
+    private $messagesSender;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipientId")
+     */
+    private $messagesRecipient;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
         $this->reviewsGiver = new ArrayCollection();
         $this->reviewsTaker = new ArrayCollection();
+        $this->messagesSender = new ArrayCollection();
+        $this->messagesRecipient = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -403,6 +415,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($reviewsTaker->getUserTakerId() === $this) {
                 $reviewsTaker->setUserTakerId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessagesSender(): Collection
+    {
+        return $this->messagesSender;
+    }
+
+    public function addMessagesSender(Message $messagesSender): self
+    {
+        if (!$this->messagesSender->contains($messagesSender)) {
+            $this->messagesSender[] = $messagesSender;
+            $messagesSender->setUserSenderId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesSender(Message $messagesSender): self
+    {
+        if ($this->messagesSender->removeElement($messagesSender)) {
+            // set the owning side to null (unless already changed)
+            if ($messagesSender->getUserSenderId() === $this) {
+                $messagesSender->setUserSenderId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessagesRecipient(): Collection
+    {
+        return $this->messagesRecipient;
+    }
+
+    public function addMessagesRecipient(Message $messagesRecipient): self
+    {
+        if (!$this->messagesRecipient->contains($messagesRecipient)) {
+            $this->messagesRecipient[] = $messagesRecipient;
+            $messagesRecipient->setUserRecipientId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessagesRecipient(Message $messagesRecipient): self
+    {
+        if ($this->messagesRecipient->removeElement($messagesRecipient)) {
+            // set the owning side to null (unless already changed)
+            if ($messagesRecipient->getUserRecipientId() === $this) {
+                $messagesRecipient->setUserRecipientId(null);
             }
         }
 
