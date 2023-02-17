@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +69,16 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $userId;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PostTag::class, mappedBy="post")
+     */
+    private $postTags;
+
+    public function __construct()
+    {
+        $this->postTags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -189,6 +201,36 @@ class Post
     public function setUserId(?User $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostTag>
+     */
+    public function getPostTags(): Collection
+    {
+        return $this->postTags;
+    }
+
+    public function addPostTag(PostTag $postTag): self
+    {
+        if (!$this->postTags->contains($postTag)) {
+            $this->postTags[] = $postTag;
+            $postTag->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostTag(PostTag $postTag): self
+    {
+        if ($this->postTags->removeElement($postTag)) {
+            // set the owning side to null (unless already changed)
+            if ($postTag->getPost() === $this) {
+                $postTag->setPost(null);
+            }
+        }
 
         return $this;
     }
