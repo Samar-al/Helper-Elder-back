@@ -1,0 +1,10 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#113517",
+        "titleBar.activeBackground": "#174A20",
+        "titleBar.activeForeground": "#F5FCF6"
+    },
+    "emmet.includeLanguages": {
+        "twig": "html"
+    }
+}
