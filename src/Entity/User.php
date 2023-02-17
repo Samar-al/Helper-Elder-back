@@ -61,12 +61,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=6)
      */
-    private $postal_code;
+    private $postalCode;
 
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $role;
 
     /**
      * @ORM\Column(type="text")
@@ -76,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $avg_rating;
+    private $avgRating;
 
     /**
      * @ORM\Column(type="datetime")
@@ -113,6 +109,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $messagesRecipient;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1Id")
+     */
+    private $conversationsUser1;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2Id")
+     */
+    private $conversationsUser2;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -120,6 +126,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reviewsTaker = new ArrayCollection();
         $this->messagesSender = new ArrayCollection();
         $this->messagesRecipient = new ArrayCollection();
+        $this->conversationsUser1 = new ArrayCollection();
+        $this->conversationsUser2 = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -261,27 +269,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPostalCode(): ?string
     {
-        return $this->postal_code;
+        return $this->postalCode;
     }
 
     public function setPostalCode(string $postal_code): self
     {
-        $this->postal_code = $postal_code;
+        $this->postalCode = $postal_code;
 
         return $this;
     }
 
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -297,12 +294,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getAvgRating(): ?int
     {
-        return $this->avg_rating;
+        return $this->avgRating;
     }
 
     public function setAvgRating(?int $avg_rating): self
     {
-        $this->avg_rating = $avg_rating;
+        $this->avgRating = $avg_rating;
 
         return $this;
     }
@@ -343,7 +340,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->posts->contains($post)) {
             $this->posts[] = $post;
-            $post->setUserId($this);
+            $post->setUser($this);
         }
 
         return $this;
@@ -353,8 +350,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->posts->removeElement($post)) {
             // set the owning side to null (unless already changed)
-            if ($post->getUserId() === $this) {
-                $post->setUserId(null);
+            if ($post->getUser() === $this) {
+                $post->setUser(null);
             }
         }
 
@@ -373,7 +370,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->reviewsGiver->contains($reviewsGiver)) {
             $this->reviewsGiver[] = $reviewsGiver;
-            $reviewsGiver->setUserGiverId($this);
+            $reviewsGiver->setUserGiver($this);
         }
 
         return $this;
@@ -383,8 +380,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->reviewsGiver->removeElement($review)) {
             // set the owning side to null (unless already changed)
-            if ($review->getUserGiverId() === $this) {
-                $review->setUserGiverId(null);
+            if ($review->getUserGiver() === $this) {
+                $review->setUserGiver(null);
             }
         }
 
@@ -403,7 +400,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->reviewsTaker->contains($reviewsTaker)) {
             $this->reviewsTaker[] = $reviewsTaker;
-            $reviewsTaker->setUserTakerId($this);
+            $reviewsTaker->setUserTaker($this);
         }
 
         return $this;
@@ -413,8 +410,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->reviewsTaker->removeElement($reviewsTaker)) {
             // set the owning side to null (unless already changed)
-            if ($reviewsTaker->getUserTakerId() === $this) {
-                $reviewsTaker->setUserTakerId(null);
+            if ($reviewsTaker->getUserTaker() === $this) {
+                $reviewsTaker->setUserTaker(null);
             }
         }
 
@@ -433,7 +430,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->messagesSender->contains($messagesSender)) {
             $this->messagesSender[] = $messagesSender;
-            $messagesSender->setUserSenderId($this);
+            $messagesSender->setUserSender($this);
         }
 
         return $this;
@@ -443,8 +440,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->messagesSender->removeElement($messagesSender)) {
             // set the owning side to null (unless already changed)
-            if ($messagesSender->getUserSenderId() === $this) {
-                $messagesSender->setUserSenderId(null);
+            if ($messagesSender->getUserSender() === $this) {
+                $messagesSender->setUserSender(null);
             }
         }
 
@@ -463,7 +460,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->messagesRecipient->contains($messagesRecipient)) {
             $this->messagesRecipient[] = $messagesRecipient;
-            $messagesRecipient->setUserRecipientId($this);
+            $messagesRecipient->setUserRecipient($this);
         }
 
         return $this;
@@ -473,8 +470,68 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->messagesRecipient->removeElement($messagesRecipient)) {
             // set the owning side to null (unless already changed)
-            if ($messagesRecipient->getUserRecipientId() === $this) {
-                $messagesRecipient->setUserRecipientId(null);
+            if ($messagesRecipient->getUserRecipient() === $this) {
+                $messagesRecipient->setUserRecipient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversationsUser1(): Collection
+    {
+        return $this->conversationsUser1;
+    }
+
+    public function addConversationsUser1(Conversation $conversationsUser1): self
+    {
+        if (!$this->conversationsUser1->contains($conversationsUser1)) {
+            $this->conversationsUser1[] = $conversationsUser1;
+            $conversationsUser1->setUser1($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationsUser1(Conversation $conversationsUser1): self
+    {
+        if ($this->conversationsUser1->removeElement($conversationsUser1)) {
+            // set the owning side to null (unless already changed)
+            if ($conversationsUser1->getUser1() === $this) {
+                $conversationsUser1->setUser1(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversationsUser2(): Collection
+    {
+        return $this->conversationsUser2;
+    }
+
+    public function addConversationsUser2(Conversation $conversationsUser2): self
+    {
+        if (!$this->conversationsUser2->contains($conversationsUser2)) {
+            $this->conversationsUser2[] = $conversationsUser2;
+            $conversationsUser2->setUser2($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationsUser2(Conversation $conversationsUser2): self
+    {
+        if ($this->conversationsUser2->removeElement($conversationsUser2)) {
+            // set the owning side to null (unless already changed)
+            if ($conversationsUser2->getUser2() === $this) {
+                $conversationsUser2->setUser2(null);
             }
         }
 

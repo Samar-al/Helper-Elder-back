@@ -68,17 +68,20 @@ class Post
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userId;
+    private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=PostTag::class, mappedBy="post")
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      */
-    private $postTags;
+    private $tag;
 
     public function __construct()
     {
-        $this->postTags = new ArrayCollection();
+        $this->tag = new ArrayCollection();
     }
+
+    
+
 
     public function getId(): ?int
     {
@@ -193,45 +196,42 @@ class Post
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
-        return $this->userId;
+        return $this->user;
     }
 
-    public function setUserId(?User $userId): self
+    public function setUser(?User $user): self
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, PostTag>
+     * @return Collection<int, Tag>
      */
-    public function getPostTags(): Collection
+    public function getTag(): Collection
     {
-        return $this->postTags;
+        return $this->tag;
     }
 
-    public function addPostTag(PostTag $postTag): self
+    public function addTag(Tag $tag): self
     {
-        if (!$this->postTags->contains($postTag)) {
-            $this->postTags[] = $postTag;
-            $postTag->setPost($this);
+        if (!$this->tag->contains($tag)) {
+            $this->tag[] = $tag;
         }
 
         return $this;
     }
 
-    public function removePostTag(PostTag $postTag): self
+    public function removeTag(Tag $tag): self
     {
-        if ($this->postTags->removeElement($postTag)) {
-            // set the owning side to null (unless already changed)
-            if ($postTag->getPost() === $this) {
-                $postTag->setPost(null);
-            }
-        }
+        $this->tag->removeElement($tag);
 
         return $this;
     }
+
+   
+    
 }

@@ -36,13 +36,24 @@ class Message
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesSender")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userSenderId;
+    private $userSender;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesRecipient")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userRecipientId;
+    private $userRecipient;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $conversation;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $readByUser = 0;
 
     public function getId(): ?int
     {
@@ -85,26 +96,50 @@ class Message
         return $this;
     }
 
-    public function getUserSenderId(): ?User
+    public function getUserSender(): ?User
     {
-        return $this->userSenderId;
+        return $this->userSender;
     }
 
-    public function setUserSenderId(?User $userSenderId): self
+    public function setUserSender(?User $userSender): self
     {
-        $this->userSenderId = $userSenderId;
+        $this->userSender = $userSender;
 
         return $this;
     }
 
-    public function getUserRecipientId(): ?User
+    public function getUserRecipient(): ?User
     {
-        return $this->userRecipientId;
+        return $this->userRecipient;
     }
 
-    public function setUserRecipientId(?User $userRecipientId): self
+    public function setUserRecipient(?User $userRecipient): self
     {
-        $this->userRecipientId = $userRecipientId;
+        $this->userRecipient = $userRecipient;
+
+        return $this;
+    }
+
+    public function getConversation(): ?Conversation
+    {
+        return $this->conversation;
+    }
+
+    public function setConversation(?Conversation $conversation): self
+    {
+        $this->conversation = $conversation;
+
+        return $this;
+    }
+
+    public function isReadByUser(): ?bool
+    {
+        return $this->readByUser;
+    }
+
+    public function setReadByUser(bool $readByUser): self
+    {
+        $this->readByUser = $readByUser;
 
         return $this;
     }

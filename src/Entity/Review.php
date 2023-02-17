@@ -41,13 +41,13 @@ class Review
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userGiverId;
+    private $userGiver;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviewsTaker")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $userTakerId;
+    private $userTaker;
 
     public function getId(): ?int
     {
@@ -102,26 +102,26 @@ class Review
         return $this;
     }
 
-    public function getUserGiverId(): ?User
+    public function getUserGiver(): ?User
     {
-        return $this->userGiverId;
+        return $this->userGiver;
     }
 
-    public function setUserGiverId(?User $userGiverId): self
+    public function setUserGiver(?User $userGiver): self
     {
-        $this->userGiverId = $userGiverId;
+        $this->userGiver = $userGiver;
 
         return $this;
     }
 
-    public function getUserTakerId(): ?User
+    public function getUserTaker(): ?User
     {
-        return $this->userTakerId;
+        return $this->userTaker;
     }
 
-    public function setUserTakerId(?User $userTakerId): self
+    public function setUserTaker(?User $userTaker): self
     {
-        $this->userTakerId = $userTakerId;
+        $this->userTaker = $userTaker;
 
         return $this;
     }
