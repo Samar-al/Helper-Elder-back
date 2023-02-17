@@ -93,9 +93,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $posts;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiverId")
+     */
+    private $reviewsGiver;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTakerId")
+     */
+    private $reviewsTaker;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->reviewsGiver = new ArrayCollection();
+        $this->reviewsTaker = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,6 +343,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($post->getUserId() === $this) {
                 $post->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviewsGiver(): Collection
+    {
+        return $this->reviewsGiver;
+    }
+
+    public function addReviewGiver(Review $reviewsGiver): self
+    {
+        if (!$this->reviewsGiver->contains($reviewsGiver)) {
+            $this->reviewsGiver[] = $reviewsGiver;
+            $reviewsGiver->setUserGiverId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReviewGiver(Review $review): self
+    {
+        if ($this->reviewsGiver->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getUserGiverId() === $this) {
+                $review->setUserGiverId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviewsTaker(): Collection
+    {
+        return $this->reviewsTaker;
+    }
+
+    public function addReviewsTaker(Review $reviewsTaker): self
+    {
+        if (!$this->reviewsTaker->contains($reviewsTaker)) {
+            $this->reviewsTaker[] = $reviewsTaker;
+            $reviewsTaker->setUserTakerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReviewsTaker(Review $reviewsTaker): self
+    {
+        if ($this->reviewsTaker->removeElement($reviewsTaker)) {
+            // set the owning side to null (unless already changed)
+            if ($reviewsTaker->getUserTakerId() === $this) {
+                $reviewsTaker->setUserTakerId(null);
             }
         }
 
