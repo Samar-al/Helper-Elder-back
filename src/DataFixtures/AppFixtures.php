@@ -44,7 +44,7 @@ class AppFixtures extends Fixture
         $manager->persist($userAdmin);
 
         //create several users
-        $populator->addEntity(User::class,10,[
+        $populator->addEntity(User::class, 10, [
             "firstname" => function () use ($faker) {
                 return $faker->firstName(10, 240);
             },
@@ -58,7 +58,7 @@ class AppFixtures extends Fixture
                 return $faker->dateTime();
             },
             "gender" => function () use ($faker) {
-                return $faker->numberBetween(1,2);
+                return $faker->numberBetween(1, 2);
             },
             "postalCode" => function () use ($faker) {
                 return $faker->numerify('#####');
@@ -71,19 +71,19 @@ class AppFixtures extends Fixture
             }
         ]);
 
-            $user = new User();
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
-            $user->setRoles(["ROLE_USER"]);
-            $manager->persist($user);
+        $user = new User();
+        $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
+        $user->setRoles(["ROLE_USER"]);
+        $manager->persist($user);
 
         // !TAGS
         //create tags
-        $populator->addEntity(Tag::class,15,[
+        $populator->addEntity(Tag::class, 15, [
             "name" => function () use ($faker) {
                 return $faker->words(2, true);
             },
             "description" => function () use ($faker) {
-                return $faker->text(100); 
+                return $faker->text(100);
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
@@ -93,16 +93,16 @@ class AppFixtures extends Fixture
         // ! POST
         //creation of 15 posts with the faker
         $populator->addEntity(Post::class, 15, [
-            'title'=> function() use ($faker) {
+            'title'=> function () use ($faker) {
                 return $faker->sentence(7);
             },
-            'content'=> function() use ($faker) {
+            'content'=> function () use ($faker) {
                 return $faker->text(500);
             },
-            'houlyRate'=>function() use ($faker) {
+            'houlyRate'=>function () use ($faker) {
                 return $faker->randomFloat(1, 1, 50);
             },
-            'workType'=>function() use ($faker) {
+            'workType'=>function () use ($faker) {
                 return $faker->boolean();
             },
             "postalCode" => function () use ($faker) {
@@ -117,18 +117,18 @@ class AppFixtures extends Fixture
         ]);
 
         // ! Review
-            $populator->addEntity(Review::class,10,[
-            "content" => function () use ($faker) {
-                return $faker->text(300);
-            },
-            "rate" => function() use ($faker) {
-                return $faker->randomFloat(1, 1, 5);
-            },
-            "createdAt" => function () use ($faker) {
-                return $faker->dateTime();
-            },
+        $populator->addEntity(Review::class, 10, [
+        "content" => function () use ($faker) {
+            return $faker->text(300);
+        },
+        "rate" => function () use ($faker) {
+            return $faker->randomFloat(1, 1, 5);
+        },
+        "createdAt" => function () use ($faker) {
+            return $faker->dateTime();
+        },
         ]);
-            
+
         // ! POST TAG
         $insertedItems = $populator->execute();
 
@@ -136,23 +136,23 @@ class AppFixtures extends Fixture
         $posts = [];
 
         // putting posts in post array, with the help of $insertedItems variable
-        foreach($insertedItems["App\Entity\Post"] as $post){
+        foreach ($insertedItems["App\Entity\Post"] as $post) {
             // construct calling for some obscur reason
             $post->__construct();
             $posts[] = $post;
         }
 
         // Iterating on tags and adding randomly to each tag a post
-        foreach($insertedItems["App\Entity\Tag"] as $tag){
-            // construct calling for some obscur reason 
+        foreach ($insertedItems["App\Entity\Tag"] as $tag) {
+            // construct calling for some obscur reason
             $tag->__construct();
 
             // Get randomly generated index
             $randIndex = array_rand($posts);
             // adding this post to a tag
             $tag->addPost($posts[$randIndex]);
-
-
+        }
         $manager->flush();
     }
+
 }
