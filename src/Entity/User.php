@@ -72,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $avgRating;
+    private $avgRating=0;
 
     /**
      * @ORM\Column(type="datetime")
