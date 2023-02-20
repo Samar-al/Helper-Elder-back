@@ -129,6 +129,29 @@ class AppFixtures extends Fixture
             },
         ]);
             
+        // ! POST TAG
+        $insertedItems = $populator->execute();
+
+        // Creating posts array
+        $posts = [];
+
+        // putting posts in post array, with the help of $insertedItems variable
+        foreach($insertedItems["App\Entity\Post"] as $post){
+            // construct calling for some obscur reason
+            $post->__construct();
+            $posts[] = $post;
+        }
+
+        // Iterating on tags and adding randomly to each tag a post
+        foreach($insertedItems["App\Entity\Tag"] as $tag){
+            // construct calling for some obscur reason 
+            $tag->__construct();
+
+            // Get randomly generated index
+            $randIndex = array_rand($posts);
+            // adding this post to a tag
+            $tag->addPost($posts[$randIndex]);
+
 
         $manager->flush();
     }
