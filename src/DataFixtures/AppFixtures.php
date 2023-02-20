@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Review;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -74,6 +75,20 @@ class AppFixtures extends Fixture
             $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
             $user->setRoles(["ROLE_USER"]);
             $manager->persist($user);
+
+        // ! Review
+            $populator->addEntity(Review::class,10,[
+            "content" => function () use ($faker) {
+                return $faker->text(300);
+            },
+            "rate" => function() use ($faker) {
+                return $faker->randomFloat(1, 1, 5);
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            },
+        ]);
+            
 
         $manager->flush();
     }
