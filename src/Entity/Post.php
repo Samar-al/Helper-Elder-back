@@ -74,15 +74,20 @@ class Post
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      */
     private $tag;
+   
+    //function to sluggify the title and set it.
+    private function sluggify(string $string): string
+    {
+        return preg_replace('/[^A-Za-z0-9-]+/', '-', strtolower(trim(strip_tags($string))));
+    }
 
     public function __construct()
     {
         $this->tag = new ArrayCollection();
+        $this->slug = $this->sluggify($this->getTitle());
     }
 
     
-
-
     public function getId(): ?int
     {
         return $this->id;
