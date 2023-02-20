@@ -90,6 +90,32 @@ class AppFixtures extends Fixture
             }
         ]);
 
+        // ! POST
+        //creation of 15 posts with the faker
+        $populator->addEntity(Post::class, 15, [
+            'title'=> function() use ($faker) {
+                return $faker->sentence(7);
+            },
+            'content'=> function() use ($faker) {
+                return $faker->text(500);
+            },
+            'houlyRate'=>function() use ($faker) {
+                return $faker->randomFloat(1, 1, 50);
+            },
+            'workType'=>function() use ($faker) {
+                return $faker->boolean();
+            },
+            "postalCode" => function () use ($faker) {
+                return $faker->numerify('#####');
+            },
+            'radius'=> function () use ($faker) {
+                return $faker->numberBetween(0, 50);
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            },
+        ]);
+
         $manager->flush();
     }
 }
