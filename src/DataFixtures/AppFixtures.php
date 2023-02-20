@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Tag;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,14 +22,14 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // ajout des fixtures en français
+        // add french fixtures
         $faker = Faker\Factory::create("fr_FR");
 
-        //ajout du populator
+        // add populator
         $populator = new \Faker\ORM\Doctrine\Populator($faker, $manager);
 
         // !USER
-        //creation d'un admin
+        //create admin user
         $userAdmin = new User();
         $userAdmin->setEmail("admin@admin.com");
         $userAdmin->setFirstname("admin");
@@ -42,7 +43,7 @@ class AppFixtures extends Fixture
         $userAdmin->setCreatedAt(new DateTime("now"));
         $manager->persist($userAdmin);
 
-        //Création de plusieurs utilisateur
+        //create several users
         $populator->addEntity(User::class,10,[
             "firstname" => function () use ($faker) {
                 return $faker->firstName(10, 240);
@@ -74,6 +75,20 @@ class AppFixtures extends Fixture
             $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
             $user->setRoles(["ROLE_USER"]);
             $manager->persist($user);
+
+        // !TAGS
+        //create tags
+        $populator->addEntity(Tag::class,15,[
+            "name" => function () use ($faker) {
+                return $faker->words(2, true);
+            },
+            "description" => function () use ($faker) {
+                return $faker->text(100); 
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            }
+        ]);
 
         $manager->flush();
     }
