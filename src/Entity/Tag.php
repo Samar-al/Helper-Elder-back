@@ -6,6 +6,7 @@ use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
@@ -16,16 +17,19 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"posts"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Groups({"posts"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"posts"})
      */
     private $description;
 
@@ -43,6 +47,11 @@ class Tag
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="tag")
      */
     private $posts;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $logo;
 
     public function __construct()
     {
@@ -125,6 +134,18 @@ class Tag
         if ($this->posts->removeElement($post)) {
             $post->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

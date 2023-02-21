@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -19,16 +20,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"posts"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"posts"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"posts"})
      */
     private $roles = [];
 
@@ -40,11 +44,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"posts"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"posts"})
      */
     private $lastname;
 
@@ -60,6 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=6)
+     * @Groups({"posts"})
      */
     private $postalCode;
 
@@ -71,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"posts"})
      */
     private $avgRating=0;
 
@@ -91,38 +99,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
+     * @Groups({"posts"})
      */
     private $reviewsGiver;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTaker")
+     * @Groups({"posts"})
      */
     private $reviewsTaker;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSender")
+     * @Groups({"posts"})
      */
     private $messagesSender;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipient")
+     * @Groups({"posts"})
      */
     private $messagesRecipient;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1")
+     * @Groups({"posts"})
      */
     private $conversationsUser1;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2")
+     * @Groups({"posts"})
      */
     private $conversationsUser2;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"posts"})
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $picture;
 
     public function __construct()
     {
@@ -551,6 +571,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
