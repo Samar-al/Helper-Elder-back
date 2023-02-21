@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
 
         // !USER
         //create admin user
-         $userAdmin = new User();
+        $userAdmin = new User();
         $userAdmin->setEmail("admin@admin.com");
         $userAdmin->setFirstname("admin");
         $userAdmin->setLastname("admin");
@@ -176,5 +176,3 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 }
-
-
