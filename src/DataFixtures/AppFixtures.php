@@ -73,6 +73,9 @@ class AppFixtures extends Fixture
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
+            },
+            "updatedAt" => function () use ($faker) {
+                return null;
             }
         ]);
         
@@ -87,6 +90,9 @@ class AppFixtures extends Fixture
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
+            },
+            "updatedAt" => function () use ($faker) {
+                return null;
             }
         ]);
 
@@ -114,6 +120,9 @@ class AppFixtures extends Fixture
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
             },
+            "updatedAt" => function () use ($faker) {
+                return null;
+            }
         ]);
         
         
@@ -128,6 +137,9 @@ class AppFixtures extends Fixture
         "createdAt" => function () use ($faker) {
             return $faker->dateTime();
         },
+        "updatedAt" => function () use ($faker) {
+            return null;
+        }
         ]);
 
         // ! POST TAG
