@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -24,36 +25,46 @@ class Post
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 100, max = 500)
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
+     * 
+     * @Assert\Range(min = 0, max = 5)
      */
     private $hourlyRate;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"posts"})
+     * @Assert\NotBlank
      */
     private $workType;
 
     /**
      * @ORM\Column(type="string", length=6)
      * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 5, max = 5)
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
+     * @Assert\Range(min = 0, max = 4)
      */
     private $radius;
 
@@ -85,6 +96,7 @@ class Post
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      * @Groups({"posts"})
+     * @Assert\NotBlank
      */
     private $tag;
    
