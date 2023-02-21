@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -11,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Message
 {
     /**
+     * @Groups({"users"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -18,16 +20,19 @@ class Message
     private $id;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="text")
      */
     private $content;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
 
     /**
+     * @Groups({"users"})
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
@@ -45,12 +50,14 @@ class Message
     private $userRecipient;
 
     /**
+     * @Groups({"users"})
      * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
      */
     private $conversation;
 
     /**
+     * 
      * @ORM\Column(type="boolean")
      */
     private $readByUser = 0;

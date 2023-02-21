@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +17,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
+     * @Groups({"users"})
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -24,53 +26,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"users"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"users"})
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"users"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users"})
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"users"})
      */
     private $birthdate;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users"})
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=6)
+     * @Groups({"users"})
      */
     private $postalCode;
 
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"users"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Groups({"users"})
      */
     private $avgRating=0;
 
@@ -81,46 +93,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"users"})
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
+     * @Groups({"users"})
      */
     private $posts;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
+     * @Groups({"users"})
      */
     private $reviewsGiver;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTaker")
+     * @Groups({"users"})
      */
     private $reviewsTaker;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSender")
+     * @Groups({"users"})
      */
     private $messagesSender;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipient")
+     * @Groups({"users"})
      */
     private $messagesRecipient;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1")
+     * @Groups({"users"})
      */
     private $conversationsUser1;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2")
+     * @Groups({"users"})
      */
     private $conversationsUser2;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users"})
      */
     private $type;
 

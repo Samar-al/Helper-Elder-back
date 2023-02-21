@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ class Post
 {
     /**
      * @ORM\Id
+     * @Groups({"users"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
@@ -21,36 +23,43 @@ class Post
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"users"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"users"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"users"})
      */
     private $hourlyRate;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"users"})
      */
     private $workType;
 
     /**
      * @ORM\Column(type="string", length=6)
+     * @Groups({"users"})
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"users"})
      */
     private $radius;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"users"})
      */
     private $slug;
 
