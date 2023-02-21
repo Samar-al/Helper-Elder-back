@@ -2,7 +2,9 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Post;
 use App\Entity\Review;
+use App\Entity\Tag;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -154,8 +156,4 @@ class AppFixtures extends Fixture
         }
         $manager->flush();
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> e2058db7149cc4effe135b170b8794385af3936f
 }
