@@ -44,17 +44,17 @@ class AppFixtures extends Fixture
         $userAdmin->setDescription("Je suis le super admin! wwwwwwwwwwwwooooooooooooouuuuuuuhhhhhhhhhhhhhoooooooooooooooouuuuuuuuuuuuuuuuuu");
         $userAdmin->setCreatedAt(new DateTime("now"));
         $manager->persist($userAdmin);
-
+ 
         //create several users
         $populator->addEntity(User::class, 10, [
+            "email" => function () use ($faker) {
+                return $faker->unique()->email();
+            },
             "firstname" => function () use ($faker) {
                 return $faker->firstName(10, 240);
             },
             "lastname" => function () use ($faker) {
                 return $faker->lastName(10, 240);
-            },
-            "email" => function () use ($faker) {
-                return $faker->unique()->email();
             },
             "birthdate" => function () use ($faker) {
                 return $faker->dateTime();
@@ -68,17 +68,15 @@ class AppFixtures extends Fixture
             "description" => function () use ($faker) {
                 return $faker->text(500);
             },
+            "avgRating" => function () use ($faker) {
+                return $faker->randomFloat(1, 1, 5);
+            },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
             }
         ]);
-
-        $user = new User();
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
-        $user->setRoles(["ROLE_USER"]);
-        $manager->persist($user);
-
-        // !TAGS
+        
+        // !TAG
         //create tags
         $populator->addEntity(Tag::class, 15, [
             "name" => function () use ($faker) {
@@ -101,7 +99,7 @@ class AppFixtures extends Fixture
             'content'=> function () use ($faker) {
                 return $faker->text(500);
             },
-            'houlyRate'=>function () use ($faker) {
+            'hourlyRate'=>function () use ($faker) {
                 return $faker->randomFloat(1, 1, 50);
             },
             'workType'=>function () use ($faker) {
@@ -117,7 +115,8 @@ class AppFixtures extends Fixture
                 return $faker->dateTime();
             },
         ]);
-
+        
+        
         // ! Review
         $populator->addEntity(Review::class, 10, [
         "content" => function () use ($faker) {
@@ -133,7 +132,7 @@ class AppFixtures extends Fixture
 
         // ! POST TAG
         $insertedItems = $populator->execute();
-
+        
         // Creating posts array
         $posts = [];
 
@@ -153,6 +152,14 @@ class AppFixtures extends Fixture
             $randIndex = array_rand($posts);
             // adding this post to a tag
             $tag->addPost($posts[$randIndex]);
+        }
+
+        foreach($insertedItems["App\Entity\User"] as $user){
+            // J'appelle le constructeur car pour une raison très sombre il n'est pas appellé 
+            $user->__construct();
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
+            $user->setRoles(["ROLE_USER"]);
+            $manager->persist($user);       
         }
         $manager->flush();
     }
