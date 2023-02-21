@@ -85,39 +85,44 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="userId")
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
      */
     private $posts;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiverId")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
      */
     private $reviewsGiver;
 
     /**
-     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTakerId")
+     * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTaker")
      */
     private $reviewsTaker;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSenderId")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSender")
      */
     private $messagesSender;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipientId")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipient")
      */
     private $messagesRecipient;
 
     /**
-     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1Id")
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1")
      */
     private $conversationsUser1;
 
     /**
-     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2Id")
+     * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2")
      */
     private $conversationsUser2;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $type;
 
     public function __construct()
     {
@@ -534,6 +539,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $conversationsUser2->setUser2(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

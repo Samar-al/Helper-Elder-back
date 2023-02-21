@@ -43,6 +43,7 @@ class AppFixtures extends Fixture
         $userAdmin->setRoles(["ROLE_ADMIN"]);
         $userAdmin->setDescription("Je suis le super admin! wwwwwwwwwwwwooooooooooooouuuuuuuhhhhhhhhhhhhhoooooooooooooooouuuuuuuuuuuuuuuuuu");
         $userAdmin->setCreatedAt(new DateTime("now"));
+        $userAdmin->setType(3);
         $manager->persist($userAdmin);
  
         //create several users
@@ -76,7 +77,10 @@ class AppFixtures extends Fixture
             },
             "updatedAt" => function () use ($faker) {
                 return null;
-            }
+            },
+            "type" => function () use ($faker) {
+                return $faker->numberBetween(1, 2);
+            },
         ]);
         
         // !TAG
@@ -123,6 +127,7 @@ class AppFixtures extends Fixture
             "updatedAt" => function () use ($faker) {
                 return null;
             }
+
         ]);
         
         
