@@ -110,6 +110,7 @@ class Post
     {
         $this->tag = new ArrayCollection();
         $this->slug = $this->sluggify($this->getTitle());
+        $this->createdAt = new \DateTime('now');
     }
 
     
