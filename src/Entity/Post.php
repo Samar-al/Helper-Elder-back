@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
+ * 
  */
 class Post
 {
@@ -19,6 +20,7 @@ class Post
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"posts"})
+     * 
      */
     private $id;
 
@@ -44,7 +46,7 @@ class Post
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
      * @Assert\Type("integer")
-     * @Assert\Range(min = 0, max = 5)
+     * @Assert\Range(min = 0, max = 500)
      */
     private $hourlyRate;
 
@@ -68,7 +70,7 @@ class Post
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
-     * @Assert\Range(min = 0, max = 4)
+     * @Assert\Range(min = 0, max = 1000)
      * @Assert\Type("integer")
      */
     private $radius;
@@ -78,6 +80,7 @@ class Post
      * @Groups({"posts"})
      */
     private $slug;
+    
 
     /**
      * @ORM\Column(type="datetime")
@@ -102,7 +105,7 @@ class Post
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      * @Groups({"posts"})
      * @Assert\NotBlank
-     * @Assert\Type("App\Entity\Tag")
+     * 
      */
     private $tag;
    
@@ -115,7 +118,7 @@ class Post
     public function __construct()
     {
         $this->tag = new ArrayCollection();
-        $this->slug = $this->sluggify($this->getTitle());
+       // $this->slug = $this->sluggify($this->getTitle());
         $this->createdAt = new \DateTime('now');
     }
 
@@ -199,7 +202,7 @@ class Post
 
     public function getSlug(): ?string
     {
-        return $this->slug;
+        return $this->slug = $this->sluggify($this->getTitle());;
     }
 
     public function setSlug(string $slug): self

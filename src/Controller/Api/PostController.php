@@ -15,8 +15,18 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+
 class PostController extends AbstractController
 {
+    private $security;
+    
+
+    public function __construct(Security $security)
+    {
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
    
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})
@@ -81,18 +91,17 @@ class PostController extends AbstractController
      * @Route("/api/annonce/ajouter", name="app_api_post_add", methods={"POST"})
      * 
      */
-    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository, Security $security): Response
+    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository): Response
     {
 
         
         
-        // Je recupère le json dans la requete
+        // getting the json of notre request
         $json = $request->getContent();
-        dd($json);
-        // Si on peut sérializer avec $this->json, il est possible également d'importer le serializer et de faire la démarche en sens inverse et transformer un json en objet
-        // Pensez à composer require symfony/serializer-pack
+        
+        
         try{
-            // si le code ne lance pas d'expection nous n'allons pas dans le catch (json valide)
+            
             $post = $serializer->deserialize($json, Post::class, 'json');
             
         }catch(NotEncodableValueException $e){
@@ -101,14 +110,14 @@ class PostController extends AbstractController
         }  
        
 
-        // J'utilise le composant validator pour vérifier si les champs sont bien remplis
-        // Si l'objet est incomplet, j'aurai une erreur sql en faisant le add
+        // Validator will check that my inputs are well filled
+        // if incomplete, i will get a sql error when adding
         $errors = $validator->validate($post);
         
-        // Je boucle sur le tableau d'erreur
-        // cette condition correspond à si il y a une erreur
+        // i iterate on the errors array
+        
         if(count($errors) > 0){
-            // Je créer un tableau avec mes erreurs
+            // i create a array of errors
             $errorsArray = [];
             foreach($errors as $error){
                 // A l'index qui correspond au champs mal remplis, j'y injecte le/les messages d'erreurs
@@ -118,10 +127,10 @@ class PostController extends AbstractController
         }
 
 
-        // TODO AJOUTER L'annonce EN BDD
+        // TODO add the post in database
         
-        
-        $post->setUser($security->getUser());
+        $post->setSlug($post->getSlug());
+        $post->setUser($this->security->getUser());
         $postRepository->add($post,true);
         
 
