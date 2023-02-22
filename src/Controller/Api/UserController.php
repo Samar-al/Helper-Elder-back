@@ -28,6 +28,17 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("api/mon-profil/{id}", name="app_api_user_myProfil", methods={"GET"}, requirements={"id"="\d+"} )
+     * Edit one user in the front-office
+     */
+    public function getMyId(User $user): JsonResponse
+        {
+            
+         return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]);
+      
+    }
+
+     /**
      * @Route("api/profil/{id}/modifier", name="app_api_user_edit", methods={"GET"}, requirements={"id"="\d+"} )
      * Edit one user in the front-office
      */
@@ -39,12 +50,13 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("api/profil/{id}/modifier", name="app_api_user_update", methods={"POST"}, requirements={"id"="\d+"} )
+     * @Route("api/profil/{id}/modifier", name="app_api_user_update", methods={"PUT"}, requirements={"id"="\d+"} )
      * Edit one user in the front-office
      */
     public function edit(User $user, Request $request, UserRepository $userRepository, ValidatorInterface $validator, SerializerInterface $serializer): Response
         {
             $json = $request->getContent();
+          //  dd($json);
             try{
                 // 
                 $user = $serializer->deserialize($json, User::class, 'json');
