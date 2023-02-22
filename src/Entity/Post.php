@@ -6,6 +6,8 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -16,62 +18,85 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"posts"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 100, max = 500)
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"posts"})
+     * 
+     * @Assert\Range(min = 0, max = 5)
      */
     private $hourlyRate;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"posts"})
+     * @Assert\NotBlank
      */
     private $workType;
 
     /**
      * @ORM\Column(type="string", length=6)
+     * @Groups({"posts"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 5, max = 5)
      */
     private $postalCode;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"posts"})
+     * @Assert\Range(min = 0, max = 4)
      */
     private $radius;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"posts"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"posts"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"posts"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"posts"})
      */
     private $user;
 
     /**
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
+     * @Groups({"posts"})
+     * @Assert\NotBlank
      */
     private $tag;
    
@@ -85,6 +110,7 @@ class Post
     {
         $this->tag = new ArrayCollection();
         $this->slug = $this->sluggify($this->getTitle());
+        $this->createdAt = new \DateTime('now');
     }
 
     

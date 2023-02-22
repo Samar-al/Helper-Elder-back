@@ -69,13 +69,16 @@ class AppFixtures extends Fixture
             "description" => function () use ($faker) {
                 return $faker->text(500);
             },
+            "picture" => function () use ($faker) {
+                return "https://picsum.photos/id/" . $faker->numberBetween(1, 200) . "/100/100";
+            },
             "avgRating" => function () use ($faker) {
                 return $faker->randomFloat(1, 1, 5);
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
             },
-            "updatedAt" => function () use ($faker) {
+            "updatedAt" => function () {
                 return null;
             },
             "type" => function () use ($faker) {
@@ -91,6 +94,9 @@ class AppFixtures extends Fixture
             },
             "description" => function () use ($faker) {
                 return $faker->text(100);
+            },
+            "logo" => function () use ($faker) {
+                return "https://picsum.photos/id/" . $faker->numberBetween(1, 200) . "/100/100";
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
