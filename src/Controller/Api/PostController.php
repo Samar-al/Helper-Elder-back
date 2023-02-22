@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,8 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class PostController extends AbstractController
 {
@@ -31,7 +33,7 @@ class PostController extends AbstractController
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})
      */
-    public function getHelpersPosts(PostRepository $postRepository, UserRepository $userRepository): Response
+    public function getHelpersPosts(UserRepository $userRepository): Response
     {
         $users = $userRepository->findBy(['type'=>2]);
         if(!$users){
@@ -55,7 +57,7 @@ class PostController extends AbstractController
      /**
      * @Route("/api/annonce/recherche-aide", name="app_api_post_elder", methods={"GET"})
      */
-    public function getEldersPosts(PostRepository $postRepository, UserRepository $userRepository): Response
+    public function getEldersPosts(UserRepository $userRepository): Response
     {
 
         $users = $userRepository->findBy(['type'=>1]);
@@ -114,10 +116,10 @@ class PostController extends AbstractController
         // if incomplete, i will get a sql error when adding
         $errors = $validator->validate($post);
         
-        // i iterate on the errors array
+        //  iterate on the errors array
         
         if(count($errors) > 0){
-            // i create a array of errors
+            //  create a array of errors
             $errorsArray = [];
             foreach($errors as $error){
                 // A l'index qui correspond au champs mal remplis, j'y injecte le/les messages d'erreurs
@@ -146,6 +148,57 @@ class PostController extends AbstractController
             ]
         );
     } 
+
+    /**
+     * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): Response
+    {
+
+        if($post->getUser() != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        }
+
+        // Getting the JSON of our request
+        $json = $request->getContent();
+
+        try {
+            $post = $serializer->deserialize($json, Post::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $post]);
+        } catch (NotEncodableValueException $e) {
+            return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Validate the post
+        $errors = $validator->validate($post);
+        if (count($errors) > 0) {
+            $errorsArray = [];
+            foreach ($errors as $error) {
+                $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            return $this->json($errorsArray, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Update the post
+        $entityManager = $doctrine->getManager();
+        $post->setSlug($post->getSlug());
+        $post->setUpdatedAt(new \DateTime('now'));
+        $post->setUser($this->security->getUser());
+
+        $entityManager->flush();
+
+         return $this->json(
+            $post,
+            Response::HTTP_OK,
+            [
+                "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
+            ],
+            [
+                "groups" => "posts"
+            ]
+        );
+    }
+
 
 
 }
