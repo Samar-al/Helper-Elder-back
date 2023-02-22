@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -199,6 +200,20 @@ class PostController extends AbstractController
         );
     }
 
+    /**
+     * @Route("/api/annonce/{id}/supprimer", name="app_api_post_delete", methods={"POST"}, requirements={"id"="\d+"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function delete(Post $post, EntityManagerInterface $entityManager): Response
+    {
+        if($post->getUser() != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        }
+        $entityManager->remove($post);
+        $entityManager->flush();
+        // ! modifier la route de redirection vers le profil de la personne en question quand cette route sera créée
+        return $this->redirectToRoute('app_api_main_home', [], Response::HTTP_SEE_OTHER);
+    }
 
 
 }
