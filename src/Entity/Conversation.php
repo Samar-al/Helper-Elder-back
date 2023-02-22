@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ConversationRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,38 +17,45 @@ class Conversation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"conversation"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"conversation"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"conversation"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"conversation"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="conversationsUser1")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"conversation"})
      */
     private $user1;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="conversationsUser2")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"conversation"}, {"message"})
      */
     private $user2;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversationId")
+     * @Groups({"conversation"}, {"message"})
      */
     private $messages;
 
