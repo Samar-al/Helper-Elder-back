@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,6 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"users"})
+     * 
      */
     private $email;
 
@@ -40,18 +41,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"users"})
+     * 
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users"})
+     * @Assert\NotBlank
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users"})
+     * @Assert\NotBlank
      */
     private $lastname;
 
@@ -64,12 +68,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="smallint")
      * @Groups({"users"})
+     * @Assert\NotBlank
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=6)
      * @Groups({"users"})
+     * @Assert\NotBlank
+     * @Assert\Length(min=5, max=5)
      */
     private $postalCode;
 
@@ -77,6 +84,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="text")
      * @Groups({"users"})
+     * @Assert\NotBlank
+     * 
      */
     private $description;
 
@@ -99,7 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
-     * @Groups({"users"})
+     * 
      */
     private $posts;
 
