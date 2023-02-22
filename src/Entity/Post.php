@@ -27,6 +27,7 @@ class Post
      * @Groups({"posts"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 255)
+     * @Assert\Type("string")
      */
     private $title;
 
@@ -35,13 +36,14 @@ class Post
      * @Groups({"posts"})
      * @Assert\NotBlank
      * @Assert\Length(min = 100, max = 500)
+     * @Assert\Type("string")
      */
     private $content;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
-     * 
+     * @Assert\Type("integer")
      * @Assert\Range(min = 0, max = 5)
      */
     private $hourlyRate;
@@ -50,6 +52,7 @@ class Post
      * @ORM\Column(type="boolean")
      * @Groups({"posts"})
      * @Assert\NotBlank
+     * @Assert\Type("boolean")
      */
     private $workType;
 
@@ -58,6 +61,7 @@ class Post
      * @Groups({"posts"})
      * @Assert\NotBlank
      * @Assert\Length(min = 5, max = 5)
+     * @Assert\Type("string")
      */
     private $postalCode;
 
@@ -65,6 +69,7 @@ class Post
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"posts"})
      * @Assert\Range(min = 0, max = 4)
+     * @Assert\Type("integer")
      */
     private $radius;
 
@@ -97,6 +102,7 @@ class Post
      * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="posts")
      * @Groups({"posts"})
      * @Assert\NotBlank
+     * @Assert\Type("App\Entity\Tag")
      */
     private $tag;
    
