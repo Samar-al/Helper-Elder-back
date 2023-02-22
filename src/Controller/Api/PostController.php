@@ -88,18 +88,18 @@ class PostController extends AbstractController
         
         // Je recupère le json dans la requete
         $json = $request->getContent();
-
+        dd($json);
         // Si on peut sérializer avec $this->json, il est possible également d'importer le serializer et de faire la démarche en sens inverse et transformer un json en objet
         // Pensez à composer require symfony/serializer-pack
         try{
             // si le code ne lance pas d'expection nous n'allons pas dans le catch (json valide)
             $post = $serializer->deserialize($json, Post::class, 'json');
-
+            
         }catch(NotEncodableValueException $e){
-
+            
             return $this->json(["error" => "Json non valide"],Response::HTTP_BAD_REQUEST);
         }  
-        // $movieRepository->add($movie,true);
+       
 
         // J'utilise le composant validator pour vérifier si les champs sont bien remplis
         // Si l'objet est incomplet, j'aurai une erreur sql en faisant le add
@@ -118,7 +118,7 @@ class PostController extends AbstractController
         }
 
 
-        // TODO AJOUTER LE FILM EN BDD
+        // TODO AJOUTER L'annonce EN BDD
         
         
         $post->setUser($security->getUser());
