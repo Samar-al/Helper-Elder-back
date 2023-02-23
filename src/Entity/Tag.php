@@ -21,7 +21,7 @@ class Tag
      * @ORM\Column(type="integer")
      * @Groups({"posts"})
      * 
-     * 
+     *
      */
     private $id;
 
