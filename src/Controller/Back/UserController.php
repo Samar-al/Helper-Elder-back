@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/service", name="app_back_user_index", methods={"GET"})
+     * @Route("/utilisateur", name="app_back_user_index", methods={"GET"})
      */
     public function index(UserRepository $userRepository): Response
     {
@@ -27,7 +27,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/service/ajouter", name="app_back_user_add", methods={"GET", "POST"})
+     * @Route("/utilisateur/ajouter", name="app_back_user_add", methods={"GET", "POST"})
      */
     public function add(Request $request, UserRepository $userRepository): Response
     {
@@ -48,7 +48,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/service/{id}/", name="app_back_user_show", methods={"GET"})
+     * @Route("/utilisateur/{id}/", name="app_back_user_show", methods={"GET"})
      */
     public function show(User $user): Response
     {
@@ -58,7 +58,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("services/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
+     * @Route("utilisateur/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, User $user, UserRepository $userRepository): Response
     {
@@ -79,7 +79,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/service/{id}/supprimer", name="app_back_user_delete", methods={"POST"})
+     * @Route("/utilisateur/{id}/supprimer", name="app_back_user_delete", methods={"POST"})
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
