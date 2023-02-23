@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -34,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
-     * 
+     * @Assert\Type("array")
      * 
      */
     private $roles = [];
@@ -43,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"posts","users"})
+     * 
      */
     private $password;
 
@@ -50,30 +52,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * 
      * @ORM\Column(type="string", length=64)
      * @Groups({"posts","users"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 60)
+     * @Assert\Type("string")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"posts","users"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 60)
+     * @Assert\Type("string")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"posts","users"})
+     *@Assert\Date
      */
     private $birthdate;
 
     /**
      * @ORM\Column(type="smallint")
      * @Groups({"posts","users"})
+     * 
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=6)
      * @Groups({"posts","users"})
+     * @Assert\Length(min = 5, max = 5)
+     * @Assert\Type("string")
      */
     private $postalCode;
 
@@ -81,6 +93,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="text")
      * @Groups({"posts","users"})
+     * @Assert\Type("string")
+     * @Assert\Length(min = 100, max = 500)
      */
     private $description;
 
@@ -92,13 +106,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * 
+     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * 
+     * @Assert\DateTime
      */
     private $updatedAt;
 
@@ -147,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="smallint")
      * @Groups({"posts","users"})
+     * 
      */
     private $type;
 

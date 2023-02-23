@@ -31,7 +31,7 @@ class MainController extends AbstractController
             return $this->json(["error" => "Il n'y a pas de post créé par les utilisateurs Helpers pour le moment"], Response::HTTP_NOT_FOUND);
         }
         // return the information under a json format
-        return $this->json([$postsHelper, $postsElder],Response::HTTP_OK,[],["groups" => "posts"]);
+        return $this->json(compact("postsHelper", "postsElder"),Response::HTTP_OK,[],["groups" => "posts"]);
     }
 }
 

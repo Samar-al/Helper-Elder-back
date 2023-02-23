@@ -16,7 +16,6 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 
@@ -60,9 +59,11 @@ class UserController extends AbstractController
                 
                 throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
             }
+
             $user = $userRepository->find($this->security->getUser());
-         // Return a Json with data and status code
-         return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]); 
+
+           // Return a Json with data and status code
+            return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]); 
         
         }
 
