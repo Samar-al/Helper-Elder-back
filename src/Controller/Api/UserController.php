@@ -34,29 +34,29 @@ class UserController extends AbstractController
     public function getMyId(User $user): JsonResponse
         {
             
+         // Return a Json with data and status code
          return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]);
       
     }
 
      /**
      * @Route("api/profil/{id}/modifier", name="app_api_user_edit", methods={"GET"}, requirements={"id"="\d+"} )
-     * Edit one user in the front-office
+     * Edit my user profile in the front-office
      */
     public function show(User $user): JsonResponse
         {
-            
-         return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]);
-      
+         // Return a Json with data and status code   
+         return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]);     
     }
 
     /**
-     * @Route("api/profil/{id}/modifier", name="app_api_user_update", methods={"PUT"}, requirements={"id"="\d+"} )
-     * Edit one user in the front-office
+     * @Route("api/profil/{id}/modifier", name="app_api_user_update", methods={"PATCH"}, requirements={"id"="\d+"} )
+     * Edit one user in the front-office for update
      */
     public function edit(User $user, Request $request, UserRepository $userRepository, ValidatorInterface $validator, SerializerInterface $serializer): Response
         {
             $json = $request->getContent();
-          //  dd($json);
+         //  dd($json);
             try{
                 // 
                 $user = $serializer->deserialize($json, User::class, 'json');
@@ -89,5 +89,19 @@ class UserController extends AbstractController
                         ]
             );
         }
+    /**
+     * @Route("api/profil/{id}/supprimer", name="app_api_user_delete", methods={"POST"}, requirements={"id"="\d+"} )
+     * Delete my user profile in the front-office
+     */
+    public function delete(User $user, Request $request, UserRepository $userRepository, ValidatorInterface $validator, SerializerInterface $serializer): Response
+    {
+        
+            // 
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $userRepository->remove($user, true);
+        }
 
+     // Return a Json with data and status code   
+     return $this->redirectToRoute('app_api_user_getUserById', [], Response::HTTP_SEE_OTHER);  
+    }
 }

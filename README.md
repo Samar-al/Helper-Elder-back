@@ -37,3 +37,15 @@ puis
 ## Chargement des fixtures en BDD
 
 `php bin/console doctrine:fixtures:load`-> répondre « yes » pour effacer les données
+
+## Token
+composer require lexik/jwt-authentication-bundle
+copier les 3 lignes jwt du .env et les mettre dans le env.local en les décommentants
+php bin/console lexik:jwt:generate-keypair
+
+routes.yaml
+
+## Démarrer le serveur
+
+`symfony server start`
+
