@@ -40,6 +40,16 @@ class UserController extends AbstractController
          return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
     }
 
-
+    /**
+     * @Route("api/mon-profil/{id}", name="app_api_user_myProfil", methods={"GET"}, requirements={"id"="\d+"} )
+     * Edit one user in the front-office
+     */
+    public function getMyId(User $user): JsonResponse
+        {
+            
+         // Return a Json with data and status code
+         return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]);
+      
+    }
     
 }
