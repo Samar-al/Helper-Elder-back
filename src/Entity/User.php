@@ -146,7 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString()
     {
-        return $this->getLastname();
+        return $this->getEmail();
     }
 
     public function __construct()

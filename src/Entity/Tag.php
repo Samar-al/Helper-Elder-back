@@ -57,11 +57,11 @@ class Tag
      */
     private $logo;
 
-    public function __toString()
+     public function __toString()
     {
         return $this->getName();
     }
-
+ 
     public function __construct()
     {
         $this->posts = new ArrayCollection();

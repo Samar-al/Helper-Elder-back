@@ -60,7 +60,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="app_back_post_new", methods={"GET", "POST"})
+     * @Route("/annonce/ajouter", name="app_back_post_new", methods={"GET", "POST"})
      */
     public function new(Request $request, PostRepository $postRepository): Response
     {
@@ -82,7 +82,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_back_post_show", methods={"GET"})
+     * @Route("/annonce/{id}", name="app_back_post_show", methods={"GET"})
      */
     public function show(Post $post): Response
     {
@@ -92,7 +92,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_back_post_edit", methods={"GET", "POST"})
+     * @Route("annonce/{id}/edit", name="app_back_post_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, Post $post, PostRepository $postRepository): Response
     {
@@ -113,7 +113,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_back_post_delete", methods={"POST"})
+     * @Route("annonce/{id}/supprimer", name="app_back_post_delete", methods={"POST"})
      */
     public function delete(Request $request, Post $post, PostRepository $postRepository): Response
     {
