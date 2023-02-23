@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @Route("/back-office")
@@ -41,6 +42,20 @@ class PostController extends AbstractController
     {
         return $this->render('back/post/index.html.twig', [
             'posts' => $postRepository->findAll(),
+        ]);
+    }
+
+     /**
+     * @Route("/recherche-titre", name="app_back_post_list")
+     */
+    public function list(PostRepository $postRepository, Request $request, HttpClientInterface $client): Response
+    {
+
+        
+        $posts = $postRepository->findAllOrderByTitleSearch($request->get("search"));
+
+        return $this->render('back/post/index.html.twig', [
+            'posts' => $posts,
         ]);
     }
 
@@ -108,4 +123,6 @@ class PostController extends AbstractController
 
         return $this->redirectToRoute('app_back_post_index', [], Response::HTTP_SEE_OTHER);
     }
+
+   
 }
