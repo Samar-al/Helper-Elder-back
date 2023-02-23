@@ -156,6 +156,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $picture;
 
+    public function __toString()
+    {
+        return $this->getEmail();
+    }
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
