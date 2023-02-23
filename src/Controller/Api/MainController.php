@@ -26,7 +26,7 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/api/home-aidant", name="app_api_main_home_helper", methods={"GET"})
+     * @Route("/api/accueil-aidant", name="app_api_main_home_helper", methods={"GET"})
      */
     public function indexHelper(PostRepository $postRepository, UserRepository $userRepository): Response
     {
@@ -43,7 +43,7 @@ class MainController extends AbstractController
     }
 
      /**
-     * @Route("/api/home-cherchant", name="app_api_main_home_elder", methods={"GET"})
+     * @Route("/api/accueil-cherchant", name="app_api_main_home_elder", methods={"GET"})
      */
     public function indexElder(PostRepository $postRepository, UserRepository $userRepository): Response
     {
