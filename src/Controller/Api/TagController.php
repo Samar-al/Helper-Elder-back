@@ -17,4 +17,6 @@ class TagController extends AbstractController
         $tags = $tagRepository->findAll();
             return $this->json($tags,Response::HTTP_OK,[],["groups" => "tags"]);
     }
+
+    
 }
