@@ -70,7 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="date")
      * @Groups({"posts","users"})
-     *@Assert\Date
+     *
      */
     private $birthdate;
 
@@ -106,13 +106,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Assert\DateTime
+     * 
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Assert\DateTime
+     * 
      */
     private $updatedAt;
 
