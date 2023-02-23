@@ -6,6 +6,8 @@ use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,14 +16,26 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 
 class PostController extends AbstractController
 {
+    private $security;
+    
+
+    public function __construct(Security $security)
+    {
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
    
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})
      */
-    public function getHelpersPosts(PostRepository $postRepository, UserRepository $userRepository): Response
+    public function getHelpersPosts(UserRepository $userRepository): Response
     {
         $users = $userRepository->findBy(['type'=>2]);
         if(!$users){
@@ -45,7 +59,7 @@ class PostController extends AbstractController
      /**
      * @Route("/api/annonce/recherche-aide", name="app_api_post_elder", methods={"GET"})
      */
-    public function getEldersPosts(PostRepository $postRepository, UserRepository $userRepository): Response
+    public function getEldersPosts(UserRepository $userRepository): Response
     {
 
         $users = $userRepository->findBy(['type'=>1]);
@@ -81,18 +95,17 @@ class PostController extends AbstractController
      * @Route("/api/annonce/ajouter", name="app_api_post_add", methods={"POST"})
      * 
      */
-    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository, Security $security): Response
+    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository): Response
     {
 
         
         
-        // Je recupère le json dans la requete
+        // getting the json of notre request
         $json = $request->getContent();
-        dd($json);
-        // Si on peut sérializer avec $this->json, il est possible également d'importer le serializer et de faire la démarche en sens inverse et transformer un json en objet
-        // Pensez à composer require symfony/serializer-pack
+        
+        
         try{
-            // si le code ne lance pas d'expection nous n'allons pas dans le catch (json valide)
+            
             $post = $serializer->deserialize($json, Post::class, 'json');
             
         }catch(NotEncodableValueException $e){
@@ -101,14 +114,14 @@ class PostController extends AbstractController
         }  
        
 
-        // J'utilise le composant validator pour vérifier si les champs sont bien remplis
-        // Si l'objet est incomplet, j'aurai une erreur sql en faisant le add
+        // Validator will check that my inputs are well filled
+        // if incomplete, i will get a sql error when adding
         $errors = $validator->validate($post);
         
-        // Je boucle sur le tableau d'erreur
-        // cette condition correspond à si il y a une erreur
+        //  iterate on the errors array
+        
         if(count($errors) > 0){
-            // Je créer un tableau avec mes erreurs
+            //  create a array of errors
             $errorsArray = [];
             foreach($errors as $error){
                 // A l'index qui correspond au champs mal remplis, j'y injecte le/les messages d'erreurs
@@ -118,10 +131,10 @@ class PostController extends AbstractController
         }
 
 
-        // TODO AJOUTER L'annonce EN BDD
+        // TODO add the post in database
         
-        
-        $post->setUser($security->getUser());
+        $post->setSlug($post->getSlug());
+        $post->setUser($this->security->getUser());
         $postRepository->add($post,true);
         
 
@@ -137,6 +150,72 @@ class PostController extends AbstractController
             ]
         );
     } 
+
+    /**
+     * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
+     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     */
+    public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): Response
+    {
+
+        if($post->getUser() != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        }
+
+        // Getting the JSON of our request
+        $json = $request->getContent();
+
+        try {
+            $post = $serializer->deserialize($json, Post::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $post]);
+        } catch (NotEncodableValueException $e) {
+            return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Validate the post
+        $errors = $validator->validate($post);
+        if (count($errors) > 0) {
+            $errorsArray = [];
+            foreach ($errors as $error) {
+                $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            return $this->json($errorsArray, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Update the post
+        $entityManager = $doctrine->getManager();
+        $post->setSlug($post->getSlug());
+        $post->setUpdatedAt(new \DateTime('now'));
+        $post->setUser($this->security->getUser());
+
+        $entityManager->flush();
+
+         return $this->json(
+            $post,
+            Response::HTTP_OK,
+            [
+                "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
+            ],
+            [
+                "groups" => "posts"
+            ]
+        );
+    }
+
+    /**
+     * @Route("/api/annonce/{id}/supprimer", name="app_api_post_delete", methods={"POST"}, requirements={"id"="\d+"})
+     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     * 
+     */
+    public function delete(Post $post, EntityManagerInterface $entityManager): Response
+    {
+        if($post->getUser() != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        }
+        $entityManager->remove($post);
+        $entityManager->flush();
+        // ! modifier la route de redirection vers le profil de la personne en question quand cette route sera créée
+        return $this->redirectToRoute('app_api_main_home', [], Response::HTTP_SEE_OTHER);
+    }
 
 
 }
