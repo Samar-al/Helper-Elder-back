@@ -15,8 +15,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         login:
-            pattern: ^
-            
+            pattern: ^/api/login  
             stateless: true
             json_login:
                 check_path: /api/login_check
@@ -58,7 +57,7 @@ security:
         
         # ! BACK-OFFICE
 
-       # - { path: ^/back-office, roles: ROLE_ADMIN }
+        - { path: ^/back-office, roles: ROLE_ADMIN }
         # !API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
        #- { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
