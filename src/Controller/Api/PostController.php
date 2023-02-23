@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 
 class PostController extends AbstractController
 {
@@ -152,7 +153,7 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
-     * @IsGranted("ROLE_USER")
+     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
      */
     public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): Response
     {
@@ -202,7 +203,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/supprimer", name="app_api_post_delete", methods={"POST"}, requirements={"id"="\d+"})
-     * @IsGranted("ROLE_USER")
+     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     * 
      */
     public function delete(Post $post, EntityManagerInterface $entityManager): Response
     {
