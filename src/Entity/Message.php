@@ -13,6 +13,7 @@ class Message
 {
     /**
      * @ORM\Id
+     * @Groups({"users"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
@@ -20,6 +21,7 @@ class Message
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"users"})
      */
     private $content;
 

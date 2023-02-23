@@ -13,6 +13,7 @@ class Review
 {
     /**
      * @ORM\Id
+     * @Groups({"users"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
@@ -20,6 +21,7 @@ class Review
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"users"})
      */
     private $content;
 
