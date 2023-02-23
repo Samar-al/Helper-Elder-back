@@ -19,7 +19,7 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"posts"})
+     * @Groups({"posts", "tags"})
      * 
      *
      */
@@ -27,33 +27,37 @@ class Tag
 
     /**
      * @ORM\Column(type="string", length=32)
-     * @Groups({"posts"})
+     * @Groups({"posts", "tags"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"posts"})
+     * @Groups({"posts", "tags"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"tags"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"tags"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="tag")
+     * 
      */
     private $posts;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"tags"})
      */
     private $logo;
 

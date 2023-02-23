@@ -19,14 +19,14 @@ class Post
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"posts"})
+     * @Groups({"posts", "users"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"posts"})
+     * @Groups({"posts", "users"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 255)
      * @Assert\Type("string")
@@ -35,7 +35,7 @@ class Post
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"posts"})
+     * @Groups({"posts", "users"})
      * @Assert\NotBlank
      * @Assert\Length(min = 100, max = 500)
      * @Assert\Type("string")

@@ -203,7 +203,7 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/supprimer", name="app_api_post_delete", methods={"POST"}, requirements={"id"="\d+"})
-     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     * 
      * 
      */
     public function delete(Post $post, EntityManagerInterface $entityManager): Response

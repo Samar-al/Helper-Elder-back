@@ -34,3 +34,4 @@ class MainController extends AbstractController
         return $this->json([$postsHelper, $postsElder],Response::HTTP_OK,[],["groups" => "posts"]);
     }
 }
+
