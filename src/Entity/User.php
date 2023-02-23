@@ -28,11 +28,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"posts","users"})
+     * @Assert\Email
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * 
      * 
      */
     private $roles = [];
@@ -45,6 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
+     * 
      * @ORM\Column(type="string", length=64)
      * @Groups({"posts","users"})
      */
@@ -101,6 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
+     * @Groups({"users"})
      */
     private $posts;
 
