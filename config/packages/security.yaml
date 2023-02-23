@@ -50,7 +50,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/back-office, roles: ROLE_ADMIN }
-        # - { path: ^/api, roles: ROLE_USER }
+         - { path: ^/api, roles: ROLE_USER }
         # !API
          - { path: ^/api/login, roles: PUBLIC_ACCESS }
     role_hierarchy:

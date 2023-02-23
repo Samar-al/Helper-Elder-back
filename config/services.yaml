@@ -26,8 +26,4 @@ services:
         public: false
         autowire: true
         autoconfigure: true
-<<<<<<< HEAD
         tags: [serializer.normalizer]
-=======
-        tags: [serializer.normalizer]
->>>>>>> ec8ec094f094e845ed6257611c88db73be833dcb
