@@ -27,3 +27,11 @@ services:
         autowire: true
         autoconfigure: true
         tags: [serializer.normalizer]
+    App\EventListener\ReviewListener:
+        tags:
+            -
+                # these are the options required to define the entity listener
+                name: 'doctrine.orm.entity_listener'
+                event: 'postPersist'
+                entity: 'App\Entity\Review'
+                method: "CalculUserAverageRating"

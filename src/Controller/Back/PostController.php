@@ -30,7 +30,7 @@ class PostController extends AbstractController
      /**
      * @Route("/", name="app_back_post_home", methods={"GET"})
      */
-    public function home(): Response
+    public function home(PostRepository $postRepository): Response
     {
         return $this->render('back/post/home.html.twig',);
     }

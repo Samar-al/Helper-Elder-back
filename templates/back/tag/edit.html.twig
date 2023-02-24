@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Tag{% endblock %}
+{% block title %}Modifier un service{% endblock %}
 
 {% block body %}
-    <h1>Edit Tag</h1>
+<div class="container mt-3 mb-3">
+    <h1>Modifier un service</h1>
 
-    {{ include('back/tag/_form.html.twig', {'button_label': 'Update'}) }}
+    <div>
+    {{ include('back/tag/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+    {{ include('back/tag/_delete_form.html.twig', {'button_label': 'Supprimer'}) }}
+    </div>
 
-    <a href="{{ path('app_back_tag_index') }}">back to list</a>
-
-    {{ include('back/tag/_delete_form.html.twig') }}
+    <div class="mt-3">
+    <a href="{{ path('app_back_tag_index') }}">Revenir à la liste des services</a>
+    </div>
+</div>
 {% endblock %}

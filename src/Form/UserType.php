@@ -3,13 +3,16 @@
 namespace App\Form;
 
 use App\Entity\User;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,9 +22,9 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class,[
-                "label" => "L'email",
+                "label" => "Email",
                 "attr" => [
-                    "placeholder" => "L'email"
+                    "placeholder" => "email"
                 ]
             ])
             ->add('roles',ChoiceType::class,[
@@ -36,9 +39,9 @@ class UserType extends AbstractType
                 "type" => PasswordType::class,
                 "invalid_message" => "Les deux mots de passes doivent être identiques",
                 "first_options" => [
-                    "label" => "Le mot de passe",
+                    "label" => "Mot de passe",
                     "attr" => [
-                        "placeholder" => "Le mot de passe"
+                        "placeholder" => "mot de passe"
                     ]
                 ],
                 "second_options" => [
@@ -48,20 +51,43 @@ class UserType extends AbstractType
                     ]
                 ]
             ])
-            ->add('firstname', TextType::class)
-            ->add('lastname', TextType::class)
-            ->add('birthdate')
+            ->add('firstname', TextType::class,[
+                "label" => "Prénom",
+                "attr" => [
+                    "placeholder" => "Prénom"
+                ]
+            ])
+            ->add('lastname', TextType::class,[
+                "label" => "Nom",
+                "attr" => [
+                    "placeholder" => "Nom"
+                ]
+            ])
+            ->add('birthdate', DateType::class,[
+                "label" => "Date de naissance",
+                "attr" => [
+                    "placeholder" => "Date de naissance"
+                ]
+            ])
             ->add('gender', ChoiceType::class,[
+                "label" => "Sexe",
                 "choices" => [
                     "masculin" => 1,
-                    "feminin" => 2,
-                    
+                    "feminin" => 2,    
                 ]
                
             ])
-            ->add('postalCode', TextType::class)
+            ->add('postalCode', TextType::class,[
+                "label" => "Code postal",
+                "attr" => [
+                    "placeholder" => "Code postal"
+                ]
+            ])
             ->add('description', TextareaType::class,[
-                "label" => "description",
+                "label" => "Description",
+                "attr" => [
+                    "placeholder" => "Présentez-vous"
+                ]
             ])
             ->add('type', ChoiceType::class,[
                 "choices" => [
@@ -69,9 +95,14 @@ class UserType extends AbstractType
                     "Elder" => 2,
                     "admin" => 3,
                 ]
-               
             ])
-            ->add('picture')
+            ->add('picture', UrlType::class,[
+                "label" => "Votre image *",
+                "attr" => [
+                    "placeholder" => "Votre image"
+                ],
+                "help"=> "* L'url d'une image"
+            ])
         ;
     }
 
