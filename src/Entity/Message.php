@@ -14,20 +14,22 @@ class Message
 {
     /**
      * @ORM\Id
-     * @Groups({"users"})
+     * @Groups({"users","conversations"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"users"})
+     * @Groups({"users", "conversations"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"conversations"})
      */
     private $createdAt;
 
@@ -39,6 +41,7 @@ class Message
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesSender")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $userSender;
 

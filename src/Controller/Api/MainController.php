@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -14,7 +15,7 @@ class MainController extends AbstractController
     /**
      * @Route("/api", name="app_api_main_home", methods={"GET"})
      */
-    public function index(PostRepository $postRepository): Response
+    public function index(PostRepository $postRepository): JsonResponse
     {
        // $posts = $postRepository->findBy([], ['createdAt'=>'DESC'], 4);
         $postsHelper = $postRepository->findTheLastFourPostType(2);

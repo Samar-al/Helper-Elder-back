@@ -52,7 +52,7 @@ class UserController extends AbstractController
      * Edit one user in the front-office
      * @IsGranted("ROLE_USER")
      */
-    public function getMyId(Security $security, SerializerInterface $serializer, User $user, UserRepository $userRepository): JsonResponse
+    public function getMyId(User $user, UserRepository $userRepository): JsonResponse
         {
             
             if($user != $this->security->getUser()){

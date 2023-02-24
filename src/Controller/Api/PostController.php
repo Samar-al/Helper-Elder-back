@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PostController extends AbstractController
 {
@@ -35,7 +36,7 @@ class PostController extends AbstractController
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})
      */
-    public function getHelpersPosts(UserRepository $userRepository): Response
+    public function getHelpersPosts(UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findBy(['type'=>2]);
         if(!$users){
@@ -59,7 +60,7 @@ class PostController extends AbstractController
      /**
      * @Route("/api/annonce/recherche-aide", name="app_api_post_elder", methods={"GET"})
      */
-    public function getEldersPosts(UserRepository $userRepository): Response
+    public function getEldersPosts(UserRepository $userRepository): JsonResponse
     {
 
         $users = $userRepository->findBy(['type'=>1]);
@@ -95,7 +96,7 @@ class PostController extends AbstractController
      * @Route("/api/annonce/ajouter", name="app_api_post_add", methods={"POST"})
      * 
      */
-    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository): Response
+    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository): JsonResponse
     {
 
         
@@ -155,7 +156,7 @@ class PostController extends AbstractController
      * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
      * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
      */
-    public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): Response
+    public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): JsonResponse
     {
 
         if($post->getUser() != $this->security->getUser()){
@@ -213,8 +214,8 @@ class PostController extends AbstractController
         }
         $entityManager->remove($post);
         $entityManager->flush();
-        // ! modifier la route de redirection vers le profil de la personne en question quand cette route sera créée
-        return $this->redirectToRoute('app_api_main_home', [], Response::HTTP_SEE_OTHER);
+        
+        return $this->redirectToRoute('app_api_user_myProfil', ["id" => $post->getUser()->getId()], Response::HTTP_SEE_OTHER);
     }
 
 
