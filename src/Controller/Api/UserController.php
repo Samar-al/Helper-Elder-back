@@ -42,6 +42,8 @@ class UserController extends AbstractController
         if (empty($user)) {
             return $this->json(["error" => "Cet utilisateur n'existe pas"], Response::HTTP_NOT_FOUND);
         } 
+
+        
         // Return a Json with data and status code
          return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
     }

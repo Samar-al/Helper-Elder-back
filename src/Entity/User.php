@@ -124,7 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users", "reviews"})
      */
     private $reviewsGiver;
 
@@ -136,7 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSender")
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users",})
      */
     private $messagesSender;
 
