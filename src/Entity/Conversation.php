@@ -18,19 +18,19 @@ class Conversation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users", "conversations"})
+     * @Groups({"users", "conversations","messages"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"users", "conversations"})
+     * @Groups({"users", "conversations", "messages"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"conversations"})
+     * @Groups({"conversations", "messages"})
      */
     private $createdAt;
 
@@ -55,7 +55,7 @@ class Conversation
     private $user2;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversationId")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation")
      * @Groups({"conversations"})
      */
     private $messages;

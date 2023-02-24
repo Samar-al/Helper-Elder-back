@@ -14,7 +14,7 @@ class Message
 {
     /**
      * @ORM\Id
-     * @Groups({"users","conversations"})
+     * @Groups({"users","conversations", "messages"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
@@ -23,24 +23,26 @@ class Message
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"users", "conversations"})
+     * @Groups({"users", "conversations", "messages"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"conversations"})
+     * @Groups({"conversations", "messages"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * 
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesSender")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"messages"})
      * 
      */
     private $userSender;
@@ -48,17 +50,20 @@ class Message
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesRecipient")
      * @ORM\JoinColumn(nullable=false)
+     *  @Groups({"messages"})
      */
     private $userRecipient;
 
     /**
      * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
+     *  @Groups({"messages"})
      */
     private $conversation;
 
     /**
      * @ORM\Column(type="boolean")
+     *  @Groups({"messages"})
      */
     private $readByUser = 0;
 

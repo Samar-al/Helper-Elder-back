@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 use Symfony\Component\HttpFoundation\JsonResponse;

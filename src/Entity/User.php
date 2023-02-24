@@ -21,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users", "messages"})
      *
      */
     private $id;
@@ -171,9 +171,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $picture;
 
-    public function __toString()
+     public function __toString()
     {
-        return $this->getEmail();
+        return $this->getLastname();
     }
 
     public function __construct()

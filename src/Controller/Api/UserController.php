@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Repository\ConversationRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -52,7 +53,7 @@ class UserController extends AbstractController
      * Edit one user in the front-office
      * @IsGranted("ROLE_USER")
      */
-    public function getMyId(User $user, UserRepository $userRepository): JsonResponse
+    public function getMyId(User $user, UserRepository $userRepository, ConversationRepository $conversationRepository): JsonResponse
         {
             
             if($user != $this->security->getUser()){
@@ -61,7 +62,6 @@ class UserController extends AbstractController
             }
 
             $user = $userRepository->find($this->security->getUser());
-
            // Return a Json with data and status code
             return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]); 
         

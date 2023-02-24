@@ -2,14 +2,17 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Conversation;
 use App\Entity\User;
 use App\Repository\ConversationRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class ConversationController extends AbstractController
 {
@@ -23,19 +26,24 @@ class ConversationController extends AbstractController
         $this->security = $security;
     }
     /**
-     * @Route("/api/conversation", name="app_api_conversation")
+     * @Route("api/mon-profil/{id}/conversation", name="app_api_conversation_list", methods={"GET"}, requirements={"id"="\d+"} )
+     *
+     * Edit one user in the front-office
+     * @IsGranted("ROLE_USER")
      */
     public function index(User $user, ConversationRepository $conversationRepository): JsonResponse
     {
-        if($user != $this->security->getUser()){
-                
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ces conversation');
-        }
-        $conversation1=$conversationRepository->findBy(["user1"=>$this->security->getUser()], ["created_at"=>"DESC"]);
-        $conversation2=$conversationRepository->findBy(["user2"=>$this->security->getUser()], ["created_at"=>"DESC"]);
         
+        if($user != $this->security->getUser()){
+            
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
+        }
 
-       // Return a Json with data and status code
-        return $this->json([$conversation1, $conversation2], Response::HTTP_OK,[], ["groups" => "conversations"]); 
+        $user=$this->security->getUser();
+        $conversations = $conversationRepository->findConversationByUserId($this->security->getUser()->getId());
+        // Return a Json with data and status code
+        return $this->json($conversations, Response::HTTP_OK,[], ["groups" => "users"]); 
+    
     }
+
 }

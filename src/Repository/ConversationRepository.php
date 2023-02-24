@@ -39,6 +39,21 @@ class ConversationRepository extends ServiceEntityRepository
         }
     }
 
+    public function findConversationByUserId($id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+                SELECT conversation.* FROM conversation 
+                INNER JOIN user 
+                ON conversation.user1_id ='.$id.'
+                OR conversation.user2_id =' .$id;
+        
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+         // returns the result
+         return $resultSet->fetchAssociative();
+    }
+
 //    /**
 //     * @return Conversation[] Returns an array of Conversation objects
 //     */
