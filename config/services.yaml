@@ -36,6 +36,5 @@ services:
                 event: 'postPersist'
                 entity: 'App\Entity\Review'
                 method: "CalculUserAverageRating"
-=======
-   
+
 
