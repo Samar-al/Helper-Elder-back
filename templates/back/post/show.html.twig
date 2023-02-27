@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post{% endblock %}
+{% block title %}Annonce détaillée{% endblock %}
 
 {% block body %}
-    <h1>Post</h1>
+    <h1>Annonce détaillée</h1>
 
     <table class="table">
         <tbody>
@@ -12,39 +12,39 @@
                 <td>{{ post.id }}</td>
             </tr>
             <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <td>{{ post.title }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th>Description</th>
                 <td>{{ post.content }}</td>
             </tr>
             <tr>
-                <th>HourlyRate</th>
-                <td>{{ post.hourlyRate }}</td>
+                <th>Prix / heure</th>
+                <td>{{ post.hourlyRate }} €</td>
             </tr>
             <tr>
-                <th>WorkType</th>
+                <th>Service</th>
                 <td>{{ post.workType ? 'Yes' : 'No' }}</td>
             </tr>
             <tr>
-                <th>PostalCode</th>
+                <th>Code postal</th>
                 <td>{{ post.postalCode }}</td>
             </tr>
             <tr>
-                <th>Radius</th>
-                <td>{{ post.radius }}</td>
+                <th>Distance</th>
+                <td>{{ post.radius }} km</td>
             </tr>
             <tr>
                 <th>Slug</th>
                 <td>{{ post.slug }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
+                <th>Créée le</th>
                 <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>UpdatedAt</th>
+                <th>Modifiée le</th>
                 <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>

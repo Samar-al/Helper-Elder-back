@@ -1,23 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Post index{% endblock %}
+
+{% block title %}Liste des annonces{% endblock %}
 
 {% block body %}
-    <h1>Post index</h1>
+    
  <div class="container">
+    <h1>Liste des annonces</h1>
+    <a href="{{ path('app_back_post_new') }}">Ajouter une annonce</a>
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>HourlyRate</th>
-                <th>WorkType</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Prix/heure</th>
+                <th>Service</th>
                 <th>PostalCode</th>
-                <th>Radius</th>
-                <th>Slug</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
+                <!-- <th>Distance</th> -->
+                <!--  <th>Slug</th>-->
+                <th>Créée le</th>
+                <!-- <th>Modifiée le</th> -->
                 <th>actions</th>
             </tr>
         </thead>
@@ -27,16 +30,16 @@
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content|slice(0,20)}} ...</td>
-                <td>{{ post.hourlyRate }}</td>
+                <td>{{ post.hourlyRate}} €</td>
                 <td>{{ post.workType ? 'Yes' : 'No' }}</td>
                 <td>{{ post.postalCode }}</td>
-                <td>{{ post.radius }}</td>
-                <td>{{ post.slug }}</td>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <!-- <td>{{ post.radius }} km</td> -->
+                <!-- <td>{{ post.slug }}</td>  -->
+                <td>{{ post.createdAt ? post.createdAt|date('d-m-Y') : '' }}</td>
+                <!-- <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td> -->
                 <td>
-                    <a href="{{ path('app_back_post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('app_back_post_edit', {'id': post.id}) }}">edit</a>
+                    <a class="btn btn-secondary" href="{{ path('app_back_post_show', {'id': post.id}) }}"><i class="bi bi-eye"></i></a>
+                    <a class="btn btn-info"href="{{ path('app_back_post_edit', {'id': post.id}) }}"><i class="bi bi-pencil"></i></a>
                 </td>
             </tr>
         {% else %}
@@ -47,5 +50,5 @@
         </tbody>
     </table>
 </div>
-    <a href="{{ path('app_back_post_new') }}">Create new</a>
+  
 {% endblock %}
