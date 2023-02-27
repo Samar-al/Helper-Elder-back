@@ -33,7 +33,7 @@ class Review
      * @ORM\Column(type="smallint")
      * @Groups({"users", "reviews"})
      * @Assert\NotBlank
-     * @Assert\Type("float")
+     * @Assert\Type("integer")
      */
     private $rate;
 
