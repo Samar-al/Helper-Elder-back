@@ -36,6 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="json")
      * @Assert\Type("array")
+     * @Groups({"messages"})
      * 
      */
     private $roles = [];
@@ -51,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * 
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users", "messages"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
      * @Assert\Type("string")
@@ -60,10 +61,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users", "messages"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
-     * @Assert\Type("string")
+     * 
      */
     private $lastname;
 
@@ -171,9 +172,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $picture;
 
-     public function __toString()
+        public function __toString(): string
     {
-        return $this->getLastname();
+        return $this->getId();
     }
 
     public function __construct()
