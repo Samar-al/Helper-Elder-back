@@ -31,6 +31,16 @@ class PostController extends AbstractController
         // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
     }
+    
+     /**
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
+    }
+
    
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})

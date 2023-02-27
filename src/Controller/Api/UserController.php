@@ -33,6 +33,15 @@ class UserController extends AbstractController
         $this->security = $security;
     }
 
+    /**
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
+    }
+
     
      /**
      * @Route("api/profil/{id}", name="app_api_user_getUserById", methods={"GET"}, requirements={"id"="\d+"} )
@@ -50,18 +59,18 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("api/mon-profil/{id}", name="app_api_user_myProfil", methods={"GET"}, requirements={"id"="\d+"} )
+     * @Route("api/mon-profil", name="app_api_user_myProfil", methods={"GET"})
      *
      * Edit one user in the front-office
      * @IsGranted("ROLE_USER")
      */
-    public function getMyId(User $user, UserRepository $userRepository, ConversationRepository $conversationRepository): JsonResponse
+    public function getMyId(UserRepository $userRepository, ConversationRepository $conversationRepository): JsonResponse
         {
             
-            if($user != $this->security->getUser()){
+           /*  if($user != $this->security->getUser()){
                 
                 throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
-            }
+            } */
 
             $user = $userRepository->find($this->security->getUser());
            // Return a Json with data and status code

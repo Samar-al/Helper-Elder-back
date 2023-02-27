@@ -30,7 +30,7 @@ class Review
     private $content;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="float")
      * @Groups({"users", "reviews"})
      * @Assert\NotBlank
      * @Assert\Type("integer")
