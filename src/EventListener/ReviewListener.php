@@ -22,21 +22,20 @@ class ReviewListener {
         $user = $review->getUserTaker();
         $reviews = $user->getReviewsTaker();
             
-            // J'initialise une variable allNotes à 0
             $allNotes = null;
 
-            // Je foreach sur les reviews et j'additione toutes les notes dans allNotes
+            // adding all notes of reviews
             foreach($reviews as $review){
                 $allNotes += $review->getRate();
             }
 
-            // Je divise le total des notes par le nombre de note
+            // Calculating the average of rates
             $rating = $allNotes / count($reviews);
 
-            // Je set la note du film par mon résultat
+            // Setting the avg_rating in database
             $user->setAvgRating(round($rating,1));
 
-            // Je flush
+            // Flush
             $this->entityManager->flush();
 
     }
