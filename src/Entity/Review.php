@@ -23,7 +23,7 @@ class Review
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "reviews"})
-     * @Assert\NotBlank
+     * 
      * @Assert\Length(min = 20, max = 150)
      * @Assert\Type("string")
      */

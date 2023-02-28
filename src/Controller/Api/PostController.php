@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class PostController extends AbstractController
 {
@@ -31,6 +32,16 @@ class PostController extends AbstractController
         // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
     }
+    
+     /**
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
+    }
+
    
     /**
      * @Route("/api/annonce/aidant", name="app_api_post_helper", methods={"GET"})
@@ -153,14 +164,15 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
-     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): JsonResponse
     {
-
-        if($post->getUser() != $this->security->getUser()){
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
-        }
+        
+        $this->denyAccessUnlessGranted('post_edit', $post);
+        //if($post->getUser() != $this->security->getUser()){
+            //throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        //}
 
         // Getting the JSON of our request
         $json = $request->getContent();
@@ -170,6 +182,8 @@ class PostController extends AbstractController
         } catch (NotEncodableValueException $e) {
             return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
         }
+
+
 
         // Validate the post
         $errors = $validator->validate($post);
@@ -189,7 +203,7 @@ class PostController extends AbstractController
 
         $entityManager->flush();
 
-         return $this->json(
+        return $this->json(
             $post,
             Response::HTTP_OK,
             [
@@ -203,14 +217,16 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/supprimer", name="app_api_post_delete", methods={"POST"}, requirements={"id"="\d+"})
-     * 
+     * @IsGranted("ROLE_USER")
      * 
      */
     public function delete(Post $post, EntityManagerInterface $entityManager): Response
     {
-        if($post->getUser() != $this->security->getUser()){
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
-        }
+        
+        $this->denyAccessUnlessGranted('post_delete', $post);
+        //if($post->getUser() != $this->security->getUser()){
+            //throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
+        //}
         $entityManager->remove($post);
         $entityManager->flush();
         

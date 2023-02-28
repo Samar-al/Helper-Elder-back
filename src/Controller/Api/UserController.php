@@ -33,59 +33,47 @@ class UserController extends AbstractController
         $this->security = $security;
     }
 
-    
-     /**
-     * @Route("api/profil/{id}", name="app_api_user_getUserById", methods={"GET"}, requirements={"id"="\d+"} )
-     * Present one user
+    /**
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
      */
-    public function getUserById(User $user): JsonResponse
+    public function getLoggedUser(): JsonResponse
     {
-        if (empty($user)) {
-            return $this->json(["error" => "Cet utilisateur n'existe pas"], Response::HTTP_NOT_FOUND);
-        } 
-
-        
-        // Return a Json with data and status code
-         return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
+        return $this->json($this->getUser(), Response::HTTP_OK);
     }
 
+    
+   
+
     /**
-     * @Route("api/mon-profil/{id}", name="app_api_user_myProfil", methods={"GET"}, requirements={"id"="\d+"} )
+     * @Route("api/mon-profil", name="app_api_user_myProfil", methods={"GET"})
      *
-     * Edit one user in the front-office
      * @IsGranted("ROLE_USER")
      */
-    public function getMyId(User $user, UserRepository $userRepository, ConversationRepository $conversationRepository): JsonResponse
+    public function getMyId(): JsonResponse
         {
-            
-            if($user != $this->security->getUser()){
-                
-                throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
-            }
-
-            $user = $userRepository->find($this->security->getUser());
+            $user = $this->security->getUser();
+           
            // Return a Json with data and status code
             return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]); 
         
         }
 
     /**
-     * @Route("/api/mon-profil/{id}/modifier", name="app_api_user_edit", methods={"POST"}, requirements={"id"="\d+"})
+     * @Route("/api/mon-profil/modifier", name="app_api_user_edit", methods={"POST"})
      * @IsGranted("ROLE_USER")
+     * @IsGranted("edit", subject="user", message="Access denied")
      */
-    public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, User $user): Response
+    public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, UserRepository $userRepository): Response
     {
 
-        if($user != $this->security->getUser()){
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à modifier ce profil');
-        }
-
+        
         // Getting the JSON of our request
         $json = $request->getContent();
 
         try {
             $user = $serializer->deserialize($json, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-
+            dd($user);
         } catch (NotEncodableValueException $e) {
             
             return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
@@ -101,17 +89,19 @@ class UserController extends AbstractController
             return $this->json($errorsArray, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        
+        
         // Update the user
         $entityManager = $doctrine->getManager();
-        $user->setUpdatedAt(new \DateTime('now'));
 
+        $user->setUpdatedAt(new \DateTime('now'));
         $entityManager->flush();
 
          return $this->json(
             $user,
             Response::HTTP_OK,
             [
-                "Location" => $this->generateUrl("app_api_user_myProfil", ["id" => $user->getId()])
+              "Location" => $this->generateUrl("app_api_user_myProfil",["id" => $user->getId()])
             ],
             [
                 "groups" => "users"
@@ -119,19 +109,33 @@ class UserController extends AbstractController
         );
     }
     /**
-     * @Route("/api/mon-profil/{id}/supprimer", name="app_api_user_delete", methods={"POST"}, requirements={"id"="\d+"})
-     * 
-     * 
+     * @Route("/api/mon-profil/supprimer", name="app_api_user_delete", methods={"POST"}) 
+     * @IsGranted("edit", subject="user", message="Access denied")
+     * @IsGranted("ROLE_USER")
      */
-    public function delete(User $user, EntityManagerInterface $entityManager): Response
+    public function delete(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
-        if($user != $this->security->getUser()){
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à supprimer ce profil');
-        }
-        $entityManager->remove($user);
+        
+;       $entityManager->remove($user);
         $entityManager->flush();
-        // ! modifier la route de redirection vers le profil de la personne en question quand cette route sera créée
-        return $this->redirectToRoute('app_api_main_home', [], Response::HTTP_SEE_OTHER);
+        // Return a JSON response indicating success
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Votre profil à été supprimé avec succès',
+        ]);
+        
+    }
+
+      /**
+     * @Route("api/profil/{id}", name="app_api_user_getUserById", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     * Present one user
+     */
+    public function getUserById(User $user): JsonResponse
+    {
+    
+        // Return a Json with data and status code
+         return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
     }
     
 }
