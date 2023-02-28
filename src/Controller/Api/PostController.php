@@ -33,14 +33,7 @@ class PostController extends AbstractController
         $this->security = $security;
     }
     
-     /**
-     * Get User
-     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
-     */
-    public function getLoggedUser(): JsonResponse
-    {
-        return $this->json($this->getUser(), Response::HTTP_OK);
-    }
+    
 
    
     /**
@@ -111,7 +104,7 @@ class PostController extends AbstractController
 
         // getting the json of notre request
         $json = $request->getContent();
-       
+         
         
         try{
             
@@ -152,7 +145,7 @@ class PostController extends AbstractController
             $post,
             Response::HTTP_CREATED,
             [
-                "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
+              //  "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
             ],
             [
                 "groups" => "posts"
@@ -180,7 +173,6 @@ class PostController extends AbstractController
         }
 
 
-
         // Validate the post
         $errors = $validator->validate($post);
         if (count($errors) > 0) {
@@ -203,7 +195,7 @@ class PostController extends AbstractController
             $post,
             Response::HTTP_OK,
             [
-                "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
+               // "Location" => $this->generateUrl("app_api_post_getOneById", ["id" => $post->getId()])
             ],
             [
                 "groups" => "posts"
@@ -220,13 +212,11 @@ class PostController extends AbstractController
     {
         
         $this->denyAccessUnlessGranted('post_delete', $post);
-        //if($post->getUser() != $this->security->getUser()){
-            //throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas l\'auteur de ce post');
-        //}
+       
         $entityManager->remove($post);
         $entityManager->flush();
         
-        return $this->redirectToRoute('app_api_user_myProfil', ["id" => $post->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        return new JsonResponse(['message' => 'Annonce supprimée avec succès']);
     }
 
 

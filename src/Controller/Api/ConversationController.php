@@ -16,14 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class ConversationController extends AbstractController
 {
-    /**
-     * Get User
-     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
-     */
-    public function getLoggedUser(): JsonResponse
-    {
-        return $this->json($this->getUser(), Response::HTTP_OK);
-    }
+    
     
     /**
      * @Route("api/mon-profil/conversation", name="app_api_conversation_list", methods={"GET"})

@@ -31,15 +31,7 @@ class MessageController extends AbstractController
         // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
     }
-    /**
-     * Get User
-     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
-     */
-
-    public function getLoggedUser(): JsonResponse
-    {
-        return $this->json($this->getUser(), Response::HTTP_OK);
-    }
+   
     /**
      * @Route("/api/mon-profil/conversation/{id}", name="app_api_message", methods={"GET"}, requirements={"id"="\d+"})
      * 
@@ -123,7 +115,7 @@ class MessageController extends AbstractController
         $message,
         Response::HTTP_CREATED,
         [
-          "Location" => $this->generateUrl("app_api_message", ["id" => $conversation->getId()])
+          //"Location" => $this->generateUrl("app_api_message", ["id" => $conversation->getId()])
         ],
         [
             "groups" => "messages"

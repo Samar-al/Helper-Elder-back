@@ -22,12 +22,7 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Normalizer\EntityDenormalizer:
-        public: false
-        autowire: true
-        autoconfigure: true
-        tags: [serializer.normalizer]
-
+    
     App\EventListener\ReviewListener:
         tags:
             -
@@ -36,4 +31,10 @@ services:
                 event: 'postPersist'
                 entity: 'App\Entity\Review'
                 method: "CalculUserAverageRating"
+                
+    App\Normalizer\EntityDenormalizer:
+        public: false
+        autowire: true
+        autoconfigure: true
+        tags: [serializer.normalizer]
 

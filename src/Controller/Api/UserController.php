@@ -33,17 +33,6 @@ class UserController extends AbstractController
         $this->security = $security;
     }
 
-    /**
-     * Get User
-     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
-     */
-    public function getLoggedUser(): JsonResponse
-    {
-        return $this->json($this->getUser(), Response::HTTP_OK);
-    }
-
-    
-   
 
     /**
      * @Route("api/mon-profil", name="app_api_user_myProfil", methods={"GET"})
@@ -101,7 +90,7 @@ class UserController extends AbstractController
             $user,
             Response::HTTP_OK,
             [
-              "Location" => $this->generateUrl("app_api_user_myProfil",["id" => $user->getId()])
+             // "Location" => $this->generateUrl("app_api_user_myProfil",["id" => $user->getId()])
             ],
             [
                 "groups" => "users"

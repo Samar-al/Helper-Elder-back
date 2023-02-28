@@ -29,14 +29,7 @@ class ReviewController extends AbstractController
         $this->security = $security;
     }
 
-    /**
-     * Get User
-     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
-     */
-    public function getLoggedUser(): JsonResponse
-    {
-        return $this->json($this->getUser(), Response::HTTP_OK);
-    }
+   
 
     /**
      * @Route("api/avis/ajouter", name="app_user_review", methods={"POST"})
@@ -86,7 +79,7 @@ class ReviewController extends AbstractController
             $review,
             Response::HTTP_CREATED,
             [
-                //"Location" => $this->generateUrl("api/profil/{id}", ["id" => $review->getId()])
+               // "Location" => $this->generateUrl("app_api_user_getUserById", ["id" => $review->getUserTaker()->getId()])
             ],
             [
                 "groups" => "reviews"
