@@ -100,7 +100,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $description;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      * @Groups({"posts","users"})
      */
     private $avgRating=0;
@@ -350,12 +350,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvgRating(): ?int
+    public function getAvgRating(): ?float
     {
         return $this->avgRating;
     }
 
-    public function setAvgRating(?int $avg_rating): self
+    public function setAvgRating(?float $avg_rating): self
     {
         $this->avgRating = $avg_rating;
 

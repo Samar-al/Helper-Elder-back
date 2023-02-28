@@ -23,14 +23,13 @@ class Review
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "reviews"})
-     * 
      * @Assert\Length(min = 20, max = 150)
      * @Assert\Type("string")
      */
     private $content;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="smallint")
      * @Groups({"users", "reviews"})
      * @Assert\NotBlank
      * @Assert\Type("integer")
