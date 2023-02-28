@@ -255,6 +255,28 @@ class AppFixtures extends Fixture
             // adding this post to a tag
             $user->addMessagesSender($messages[$randIndex]);
         }
+/* 
+         // Creating messages array
+        $reviews = [];
+
+        // putting posts in post array, with the help of $insertedItems variable
+        foreach ($insertedItems["App\Entity\Reviews"] as $review) {
+            // construct calling for some obscur reason
+            
+            $reviews[] = $review;
+        }
+        // Iterating on user and adding randomly to each user a message
+       foreach ($insertedItems["App\Entity\User"] as $user) {
+           // construct calling for some obscur reason
+           $user->__construct();
+
+           // Get randomly generated index
+           $randIndex = array_rand($reviews);
+           // adding this post to a tag
+           $user->addReviewsTaker($reviews[$randIndex]);
+       }
+ */
+           
        
         $manager->flush();
     }
