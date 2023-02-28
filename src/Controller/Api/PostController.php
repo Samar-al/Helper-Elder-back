@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security as Secur;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class PostController extends AbstractController
 {
@@ -163,7 +164,7 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/annonce/{id}/modifier", name="app_api_post_edit", methods={"POST"}, requirements={"id"="\d+"})
-     * @Secur("is_granted('ROLE_ADMIN') and is_granted('ROLE_USER')")
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, Post $post): JsonResponse
     {

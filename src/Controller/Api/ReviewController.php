@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -26,6 +27,15 @@ class ReviewController extends AbstractController
         // Avoid calling getUser() in the constructor: auth may not
         // be complete yet. Instead, store the entire Security object.
         $this->security = $security;
+    }
+
+    /**
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
     }
 
     /**
