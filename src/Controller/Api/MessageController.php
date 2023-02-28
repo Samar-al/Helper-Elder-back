@@ -32,18 +32,24 @@ class MessageController extends AbstractController
         $this->security = $security;
     }
     /**
-     * @Route("/api/mon-profil/{id}/conversation/{id_conversation}", name="app_api_message", methods={"GET"}, requirements={"id"="\d+"})
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
+    }
+    /**
+     * @Route("/api/mon-profil/conversation/{id}", name="app_api_message", methods={"GET"}, requirements={"id"="\d+"})
      * 
      */
-    public function index(MessageRepository $messageRepository, ConversationRepository $conversationRepository, User $user,  int $id_conversation): JsonResponse
+    public function index(MessageRepository $messageRepository, ConversationRepository $conversationRepository, Conversation $conversation, int $id): JsonResponse
     {
         
-        if($user != $this->security->getUser()){
-                
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
-        }
+        $this->denyAccessUnlessGranted("conversation_view", $conversation);
 
-        $conversation = $conversationRepository->find($id_conversation);
+        $conversation = $conversationRepository->find($id);
         
 
         if (!$conversation) {
@@ -60,29 +66,19 @@ class MessageController extends AbstractController
     /**
      * @Route("/api/message/envoyer", name="app_api_message_send", methods={"POST"})
      * @IsGranted("ROLE_USER")
+     * 
      */
     public function send(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, MessageRepository $messageRepository, ConversationRepository $conversationRepository, UserRepository $userRepository): JsonResponse
     {
     
-     /* // Renvoi un json avec en premier argument les données et en deuxième un status code
-     return $this->json(
-         $message,
-         Response::HTTP_CREATED,
-         [
-            // "Location" => $this->generateUrl("app_api_conversation_getOneById", ["id" => $conversation->getId()])
-         ],
-         [
-             "groups" => "messages"
-         ]
-     ); 
- */
         // Extract the data from the JSON request
         $data = json_decode($request->getContent(), true);
         $title=$data['title'];
         $content = $data['content'];
         $user1 = $data['userSender'];
         $user2n = $data['userRecipient'];
-
+        
+        $this->denyAccessUnlessGranted("conversation_view", $data);
         $errors = $validator->validate($data);
 
         if(count($errors) > 0){
@@ -122,10 +118,16 @@ class MessageController extends AbstractController
         $messageRepository->add($message, true);
 
 
-        // Return a JSON response indicating success
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Message created successfully',
-        ]);
+       // Renvoi un json avec en premier argument les données et en deuxième un status code
+     return $this->json(
+        $message,
+        Response::HTTP_CREATED,
+        [
+          "Location" => $this->generateUrl("app_api_message", ["id" => $conversation->getId()])
+        ],
+        [
+            "groups" => "messages"
+        ]
+    ); 
 }
 }
