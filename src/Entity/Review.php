@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ReviewRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ReviewRepository::class)
@@ -12,6 +14,7 @@ class Review
 {
     /**
      * @ORM\Id
+     * @Groups({"users", "reviews"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
@@ -19,11 +22,18 @@ class Review
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"users", "reviews"})
+     * 
+     * @Assert\Length(min = 20, max = 150)
+     * @Assert\Type("string")
      */
     private $content;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"users", "reviews"})
+     * @Assert\NotBlank
+     * @Assert\Type("integer")
      */
     private $rate;
 

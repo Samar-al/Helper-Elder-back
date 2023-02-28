@@ -6,6 +6,8 @@ use App\Repository\ConversationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ConversationRepository::class)
@@ -16,38 +18,45 @@ class Conversation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users", "conversations","messages"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"users", "conversations", "messages"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"conversations", "messages"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"conversations"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="conversationsUser1")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"conversations"})
      */
     private $user1;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="conversationsUser2")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"conversations"})
      */
     private $user2;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversationId")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation")
+     * @Groups({"conversations"})
      */
     private $messages;
 

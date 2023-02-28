@@ -6,9 +6,12 @@ use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
+ * 
  */
 class Tag
 {
@@ -16,34 +19,53 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"posts", "tags"})
+     * 
+     *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=32)
+     * @Groups({"posts", "tags"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"posts", "tags"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"tags"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"tags"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToMany(targetEntity=Post::class, mappedBy="tag")
+     * 
      */
     private $posts;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"tags"})
+     */
+    private $logo;
+
+     public function __toString()
+    {
+        return $this->getName();
+    }
+ 
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -125,6 +147,18 @@ class Tag
         if ($this->posts->removeElement($post)) {
             $post->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+
+    public function setLogo(string $logo): self
+    {
+        $this->logo = $logo;
 
         return $this;
     }

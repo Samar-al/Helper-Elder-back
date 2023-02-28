@@ -2,6 +2,8 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Conversation;
+use App\Entity\Message;
 use App\Entity\Post;
 use App\Entity\Review;
 use App\Entity\Tag;
@@ -69,13 +71,16 @@ class AppFixtures extends Fixture
             "description" => function () use ($faker) {
                 return $faker->text(500);
             },
+            "picture" => function () use ($faker) {
+                return "https://picsum.photos/id/" . $faker->numberBetween(1, 200) . "/100/100";
+            },
             "avgRating" => function () use ($faker) {
                 return $faker->randomFloat(1, 1, 5);
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
             },
-            "updatedAt" => function () use ($faker) {
+            "updatedAt" => function () {
                 return null;
             },
             "type" => function () use ($faker) {
@@ -91,6 +96,9 @@ class AppFixtures extends Fixture
             },
             "description" => function () use ($faker) {
                 return $faker->text(100);
+            },
+            "logo" => function () use ($faker) {
+                return "https://picsum.photos/id/" . $faker->numberBetween(1, 200) . "/100/100";
             },
             "createdAt" => function () use ($faker) {
                 return $faker->dateTime();
@@ -133,18 +141,49 @@ class AppFixtures extends Fixture
         
         // ! Review
         $populator->addEntity(Review::class, 10, [
-        "content" => function () use ($faker) {
-            return $faker->text(300);
-        },
-        "rate" => function () use ($faker) {
-            return $faker->randomFloat(1, 1, 5);
-        },
-        "createdAt" => function () use ($faker) {
-            return $faker->dateTime();
-        },
-        "updatedAt" => function () use ($faker) {
-            return null;
-        }
+            "content" => function () use ($faker) {
+                return $faker->text(300);
+            },
+            "rate" => function () use ($faker) {
+                return $faker->randomFloat(1, 1, 5);
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            },
+            "updatedAt" => function () use ($faker) {
+                return null;
+            }
+        ]);
+
+        // ! Conversation
+        $populator->addEntity(Conversation::class, 10, [
+            "title" => function () use ($faker) {
+                return $faker->text(150);
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            },
+            "updatedAt" => function () use ($faker) {
+                return null;
+            },
+            
+        ]);
+
+        // ! Message
+        $populator->addEntity(Message::class, 10, [
+            "content" => function () use ($faker) {
+                return $faker->text(150);
+            },
+            "createdAt" => function () use ($faker) {
+                return $faker->dateTime();
+            },
+            "updatedAt" => function () use ($faker) {
+                return null;
+            },
+            "readByUser"=>function () use ($faker) {
+                return $faker->boolean();
+            },
+
         ]);
 
         // ! POST TAG
@@ -178,6 +217,67 @@ class AppFixtures extends Fixture
             $user->setRoles(["ROLE_USER"]);
             $manager->persist($user);       
         }
+         // Creating messages array
+         $conversations = [];
+
+         // putting posts in post array, with the help of $insertedItems variable
+         foreach ($insertedItems["App\Entity\Conversation"] as $conversation) {
+             // construct calling for some obscur reason
+             $conversation->__construct();
+             $conversations[] = $conversation;
+         }
+         foreach ($insertedItems["App\Entity\Message"] as $message) {
+             // construct calling for some obscur reason
+            
+ 
+             // Get randomly generated index
+             $randIndex = array_rand($conversations);
+             // adding this post to a tag
+             $message->setConversation($conversations[$randIndex]);
+         }
+        
+         // Creating messages array
+         $messages = [];
+
+         // putting posts in post array, with the help of $insertedItems variable
+         foreach ($insertedItems["App\Entity\Message"] as $message) {
+             // construct calling for some obscur reason
+             
+             $messages[] = $message;
+         }
+         // Iterating on user and adding randomly to each user a message
+        foreach ($insertedItems["App\Entity\User"] as $user) {
+            // construct calling for some obscur reason
+            $user->__construct();
+
+            // Get randomly generated index
+            $randIndex = array_rand($messages);
+            // adding this post to a tag
+            $user->addMessagesSender($messages[$randIndex]);
+        }
+/* 
+         // Creating messages array
+        $reviews = [];
+
+        // putting posts in post array, with the help of $insertedItems variable
+        foreach ($insertedItems["App\Entity\Reviews"] as $review) {
+            // construct calling for some obscur reason
+            
+            $reviews[] = $review;
+        }
+        // Iterating on user and adding randomly to each user a message
+       foreach ($insertedItems["App\Entity\User"] as $user) {
+           // construct calling for some obscur reason
+           $user->__construct();
+
+           // Get randomly generated index
+           $randIndex = array_rand($reviews);
+           // adding this post to a tag
+           $user->addReviewsTaker($reviews[$randIndex]);
+       }
+ */
+           
+       
         $manager->flush();
     }
 }

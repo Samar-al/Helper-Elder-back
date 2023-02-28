@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
@@ -12,46 +14,56 @@ class Message
 {
     /**
      * @ORM\Id
+     * @Groups({"users","conversations", "messages"})
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"users", "conversations", "messages"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"conversations", "messages"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * 
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesSender")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"messages"})
+     * 
      */
     private $userSender;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="messagesRecipient")
      * @ORM\JoinColumn(nullable=false)
+     *  @Groups({"messages"})
      */
     private $userRecipient;
 
     /**
      * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
      * @ORM\JoinColumn(nullable=false)
+     *  @Groups({"messages"})
      */
     private $conversation;
 
     /**
      * @ORM\Column(type="boolean")
+     *  @Groups({"messages"})
      */
     private $readByUser = 0;
 
