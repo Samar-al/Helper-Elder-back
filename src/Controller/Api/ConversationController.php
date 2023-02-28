@@ -16,31 +16,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class ConversationController extends AbstractController
 {
-    private $security;
-    
-
-    public function __construct(Security $security)
-    {
-        // Avoid calling getUser() in the constructor: auth may not
-        // be complete yet. Instead, store the entire Security object.
-        $this->security = $security;
-    }
     /**
-     * @Route("api/mon-profil/{id}/conversation", name="app_api_conversation_list", methods={"GET"}, requirements={"id"="\d+"} )
-     *
-     * Edit one user in the front-office
+     * Get User
+     * @Route("/api/user", name="app_api_user_get", methods={"GET"})
+     */
+    public function getLoggedUser(): JsonResponse
+    {
+        return $this->json($this->getUser(), Response::HTTP_OK);
+    }
+    
+    /**
+     * @Route("api/mon-profil/conversation", name="app_api_conversation_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(User $user, ConversationRepository $conversationRepository): JsonResponse
+    public function index(ConversationRepository $conversationRepository): JsonResponse
     {
-        
-        if($user != $this->security->getUser()){
-            
-            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à accéder à ce profil');
-        }
-
-        $user=$this->security->getUser();
-        $conversations = $conversationRepository->findConversationByUserId($this->security->getUser()->getId());
+    
+        $conversations = $conversationRepository->findConversationByUserId($this->getUser());
         // Return a Json with data and status code
         return $this->json($conversations, Response::HTTP_OK,[], ["groups" => "users"]); 
     
