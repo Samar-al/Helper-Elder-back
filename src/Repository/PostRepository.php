@@ -39,20 +39,37 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Post[] Returns an array of Post objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+
+
+    /**
+     * @return Post[] Returns an array of Post objects
+     */
+    public function findTheLastFourPostType($value): array
+    {
+        return $this->createQueryBuilder('p')
+        ->leftJoin('p.user', 'a')
+        ->where('a.type = :type')
+        ->setParameter('type', $value)
+        ->orderBy('p.createdAt', 'DESC')
+        ->setMaxResults(4)
+        ->getQuery()
+        ->getResult();
+        
+    }
+
+    /**
+     * 
+     * @return Post[] Returns an array of Movie objects ordered by title
+     */
+    public function findAllOrderByTitleSearch($needle = null){
+        // Quand on créer requpete personnalisé avec le builder , on utilise la ligne ci-dessous
+        return $this->createQueryBuilder('p')
+            ->orderBy("p.title")
+            ->where("p.title LIKE :needle")
+            ->setParameter("needle","%$needle%")
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Post
 //    {

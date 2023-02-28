@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Controller\Api;
+
+use App\Entity\User;
+use App\Repository\ConversationRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
+
+
+class UserController extends AbstractController
+{
+    private $security;
+    
+
+    public function __construct(Security $security)
+    {
+        // Avoid calling getUser() in the constructor: auth may not
+        // be complete yet. Instead, store the entire Security object.
+        $this->security = $security;
+    }
+
+
+    /**
+     * @Route("api/mon-profil", name="app_api_user_myProfil", methods={"GET"})
+     *
+     * @IsGranted("ROLE_USER")
+     */
+    public function getMyId(): JsonResponse
+        {
+            $user = $this->security->getUser();
+           
+           // Return a Json with data and status code
+            return $this->json($user, Response::HTTP_OK,[], ["groups" => "users"]); 
+        
+        }
+
+    /**
+     * @Route("/api/mon-profil/modifier", name="app_api_user_edit", methods={"POST"})
+     * @IsGranted("ROLE_USER")
+     * @IsGranted("edit", subject="user", message="Access denied")
+     */
+    public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, UserRepository $userRepository): Response
+    {
+
+        
+        // Getting the JSON of our request
+        $json = $request->getContent();
+
+        try {
+            $user = $serializer->deserialize($json, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
+            dd($user);
+        } catch (NotEncodableValueException $e) {
+            
+            return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
+        }
+
+        // Validate the user
+        $errors = $validator->validate($user);
+        if (count($errors) > 0) {
+            $errorsArray = [];
+            foreach ($errors as $error) {
+                $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            return $this->json($errorsArray, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        
+        
+        // Update the user
+        $entityManager = $doctrine->getManager();
+
+        $user->setUpdatedAt(new \DateTime('now'));
+        $entityManager->flush();
+
+         return $this->json(
+            $user,
+            Response::HTTP_OK,
+            [
+             // "Location" => $this->generateUrl("app_api_user_myProfil",["id" => $user->getId()])
+            ],
+            [
+                "groups" => "users"
+            ]
+        );
+    }
+    /**
+     * @Route("/api/mon-profil/supprimer", name="app_api_user_delete", methods={"POST"}) 
+     * @IsGranted("edit", subject="user", message="Access denied")
+     * @IsGranted("ROLE_USER")
+     */
+    public function delete(User $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        
+;       $entityManager->remove($user);
+        $entityManager->flush();
+        // Return a JSON response indicating success
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Votre profil à été supprimé avec succès',
+        ]);
+        
+    }
+
+      /**
+     * @Route("api/profil/{id}", name="app_api_user_getUserById", methods={"GET"})
+     * @IsGranted("ROLE_USER")
+     * Present one user
+     */
+    public function getUserById(User $user): JsonResponse
+    {
+    
+        // Return a Json with data and status code
+         return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
+    }
+    
+}
