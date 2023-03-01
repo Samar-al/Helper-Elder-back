@@ -9,3 +9,4 @@ app_logout:
 registration:
   path: /inscription
   controller: App\Controller\RegistrationController::register
+  methods: [POST]

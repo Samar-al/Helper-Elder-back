@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
@@ -34,23 +35,29 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register", methods="POST")
      */
-    public function register(Request $request, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
 
         // decode the JSON request body
         $data = json_decode($request->getContent(), true);
-        
-         /*  // validate the CSRF token
-         $token = new CsrfToken('registration', $data['_csrf_token']);
-         if (!$csrfTokenManager->isTokenValid($token)) {
-             throw new InvalidCsrfTokenException('Invalid CSRF token.');
-         } */
+        $password = $data['password'];
+        $errors = $validator->validate($data);
+       
+        if(count($errors) > 0){
+            //  create a array of errors
+            $errorsArray = [];
+            foreach($errors as $error){
+                // A l'index qui correspond au champs mal remplis, j'y injecte le/les messages d'erreurs
+                $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            return $this->json($errorsArray,Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
         // create a new user entity and form
         $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        //$form = $this->createForm(RegistrationFormType::class, $user);
         // submit the form with the decoded data
-        $form->submit($data);
-
+       // $form->submit($data);
+           /* 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -58,8 +65,17 @@ class RegistrationController extends AbstractController
                     $user,
                     $form->get('plainPassword')->getData()
                 )
-            );
-            
+            ); */
+            $user->setEmail($data["email"]);
+            $user->setRoles(["ROLE_USER"]);
+            $user->setLastname($data["lastname"]);
+            $user->setFirstname($data['firstname']);
+            $user->setBirthdate(\DateTime::createFromFormat('Y-m-d', $data['birthdate']));
+            $user->setGender($data["gender"]);
+            $user->setPostalCode($data['postalCode']);
+            $user->setDescription($data['description']);
+            $user->setType($data["type"]);
+            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
             $user->setCreatedAt(new \DateTime('now')); 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -76,16 +92,16 @@ class RegistrationController extends AbstractController
 
             // return a JSON response with a success message
             return new JsonResponse(['success' => true, 'message' => 'User registered successfully.']);
-        }
+       // }
 
-         // return a JSON response with the form errors
+         /* // return a JSON response with the form errors
          $errors = [];
          foreach ($form->getErrors(true, true) as $error) {
              $errors[] = [
                  'field' => $error->getOrigin()->getName(),
                  'message' => $error->getMessage(),
-             ];
-         }
+             ]; */
+        // }
 
          return new JsonResponse(['success' => false, 'errors' => $errors], 400);
     }
