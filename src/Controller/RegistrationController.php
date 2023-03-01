@@ -37,7 +37,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/inscription", name="app_register")
      */
     public function register(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository, MailerInterface $mailer): Response
     {
@@ -80,15 +80,6 @@ class RegistrationController extends AbstractController
                      ->subject('Please Confirm your Email')
                      ->htmlTemplate('registration/confirmation_email.html.twig')
                 );
-
-           /*  $email = (new Email())
-                ->from('helpers.elders@gmail.com')
-                ->to('helpers.elders@gmail.com')
-                ->subject('Please Confirm Your Email')
-                ->html('<p>Super email de confirmation</p>');
-
-            $mailer->send($email); */
-           
             
             return $this->json(
                 $user,
@@ -125,16 +116,8 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirect('http://localhost:8080/connexion');
     }
 
-/**
- * @Route("/csrf/token")
- */
-public function getCsrfToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
-{
-    $token = $csrfTokenManager->getToken('register')->getValue();
 
-    return new JsonResponse(['token' => $token]);
-}
 }
