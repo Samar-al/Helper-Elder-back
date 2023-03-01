@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -19,110 +21,161 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"posts","users", "messages", "use"})
+     *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"posts","users"})
+     * @Assert\Email
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Assert\Type("array")
+     * @Groups({"messages"})
+     * 
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups({"posts","users"})
+     * 
      */
     private $password;
 
     /**
+     * 
      * @ORM\Column(type="string", length=64)
+     * @Groups({"posts","users", "messages"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 60)
+     * @Assert\Type("string")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"posts","users", "messages"})
+     * @Assert\NotBlank
+     * @Assert\Length(min = 1, max = 60)
+     * 
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"posts","users"})
+     *
      */
     private $birthdate;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"posts","users"})
+     * 
      */
     private $gender;
 
     /**
      * @ORM\Column(type="string", length=6)
+     * @Groups({"posts","users"})
+     * @Assert\Length(min = 5, max = 5)
+     * @Assert\Type("string")
      */
     private $postalCode;
 
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"posts","users"})
+     * @Assert\Type("string")
+     * @Assert\Length(min = 100, max = 500)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
+     * @Groups({"posts","users"})
      */
     private $avgRating=0;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * 
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="user")
+     * @Groups({"users"})
      */
     private $posts;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
+     * @Groups({"posts","users", "reviews"})
      */
     private $reviewsGiver;
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userTaker")
+     * @Groups({"posts","users"})
      */
     private $reviewsTaker;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userSender")
+     * @Groups({"posts","users",})
      */
     private $messagesSender;
 
     /**
      * @ORM\OneToMany(targetEntity=Message::class, mappedBy="userRecipient")
+     * @Groups({"posts","users"})
      */
     private $messagesRecipient;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user1")
+     * @Groups({"posts","users"})
      */
     private $conversationsUser1;
 
     /**
      * @ORM\OneToMany(targetEntity=Conversation::class, mappedBy="user2")
+     * @Groups({"posts","users"})
      */
     private $conversationsUser2;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"posts","users"})
+     * 
      */
     private $type;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"posts","users"})
+     */
+    private $picture;
+
+        public function __toString(): string
+    {
+        return $this->getId();
+    }
 
     public function __construct()
     {
@@ -297,12 +350,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvgRating(): ?int
+    public function getAvgRating(): ?float
     {
         return $this->avgRating;
     }
 
-    public function setAvgRating(?int $avg_rating): self
+    public function setAvgRating(?float $avg_rating): self
     {
         $this->avgRating = $avg_rating;
 
@@ -551,6 +604,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setType(int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }

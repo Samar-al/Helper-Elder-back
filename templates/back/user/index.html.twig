@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des utilisateurs</h1>
+        <a href="{{ path('app_back_user_add') }}">Ajouter un utilisateur</a>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <!-- <th>Password</th> -->  
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <!--  <th>Birthdate</th> -->
+                    <th>Sexe</th>
+                    <th>Ville</th>
+                    <!-- <th>Description</th> -->
+                    <th>Note</th>
+                    <th>Créé le</th>
+                    <!-- <th>Modifié le</th> -->
+                    <th>Type</th>
+                    <!-- <th>Picture</th> -->
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                    <!-- <td>{{ user.password }}</td> -->
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <!--  <td>{{ user.birthdate ? user.birthdate|date('d-m-Y') : '' }}</td>  --> 
+                    <td>{{ user.gender }}</td>
+                    <td>{{ user.postalCode }}</td>
+                    <!-- <td>{{ user.description|slice(0,20)}} ...</td>  --> 
+                    <td>{{ user.avgRating }}</td>
+                    <td>{{ user.createdAt ? user.createdAt|date('d-m-Y') : '' }}</td>
+                    <!-- <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td> -->
+                    <td>{{ user.type }}</td>
+                    <!-- <td>{{ user.picture }}</td> -->
+                    <td>
+                        <a class="btn btn-secondary" href="{{ path('app_back_user_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>
+                        <a class="btn btn-info" href="{{ path('app_back_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+   
+   
+{% endblock %}
