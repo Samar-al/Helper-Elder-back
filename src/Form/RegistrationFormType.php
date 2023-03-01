@@ -85,7 +85,10 @@ class RegistrationFormType extends AbstractType
                     
                 ]
             ])
-            
+            ->add('_token', HiddenType::class, [
+                'mapped' => false,
+                'data' => 'no_csrf', // this is just a dummy value to disable CSRF protection
+            ])
 
         ;
     }
