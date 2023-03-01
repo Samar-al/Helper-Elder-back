@@ -28,13 +28,19 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/register", name="app_register", methods="POST")
      */
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+
+        // decode the JSON request body
+        $data = json_decode($request->getContent(), true);
+
+        // create a new user entity and form
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
+        // submit the form with the decoded data
+        $form->submit($data);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -44,7 +50,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
+            $user->setCreatedAt(new \DateTime('now')); 
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -58,10 +64,20 @@ class RegistrationController extends AbstractController
             );
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_api_main_home');
+            // return a JSON response with a success message
+            return new JsonResponse(['success' => true, 'message' => 'User registered successfully.']);
         }
 
-        return new JsonResponse(['message' => 'Registration successful']);
+         // return a JSON response with the form errors
+         $errors = [];
+         foreach ($form->getErrors(true, true) as $error) {
+             $errors[] = [
+                 'field' => $error->getOrigin()->getName(),
+                 'message' => $error->getMessage(),
+             ];
+         }
+
+         return new JsonResponse(['success' => false, 'errors' => $errors], 400);
     }
 
     /**
