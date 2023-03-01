@@ -39,12 +39,12 @@ class RegistrationController extends AbstractController
 
         // decode the JSON request body
         $data = json_decode($request->getContent(), true);
-
-         // validate the CSRF token
+        
+         /*  // validate the CSRF token
          $token = new CsrfToken('registration', $data['_csrf_token']);
          if (!$csrfTokenManager->isTokenValid($token)) {
              throw new InvalidCsrfTokenException('Invalid CSRF token.');
-         }
+         } */
         // create a new user entity and form
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -59,12 +59,13 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            
             $user->setCreatedAt(new \DateTime('now')); 
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
                     ->from(new Address('helpers.elders@gmail.com', 'Admin'))
                     ->to($user->getEmail())
@@ -120,4 +121,14 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute('app_register');
     }
+
+    /**
+ * @Route("/csrf/token")
+ */
+public function getCsrfToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
+{
+    $token = $csrfTokenManager->getToken('register')->getValue();
+
+    return new JsonResponse(['token' => $token]);
+}
 }
