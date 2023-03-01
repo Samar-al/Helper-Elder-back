@@ -7,7 +7,8 @@
     
  <div class="container">
     <h1>Liste des annonces</h1>
-    <a href="{{ path('app_back_post_new') }}">Ajouter une annonce</a>
+    <a href="{{ path('app_back_post_new') }}"><button type="button" class="btn btn-secondary p-2">Ajouter une annonce</button></a>
+    <div class="index">
     <table class="table">
         <thead>
             <tr>
@@ -49,6 +50,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
   
 {% endblock %}

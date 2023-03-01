@@ -6,7 +6,8 @@
    
     <div class="container">
         <h1>Liste des services</h1>
-        <a href="{{ path('app_back_tag_new') }}">Ajouter un service</a>
+        <a href="{{ path('app_back_tag_new') }}"><button type="button" class="btn btn-secondary">Ajouter un service</button></a>
+        <div class="index">
         <table class="table">
             <thead>
                 <tr>
@@ -40,6 +41,7 @@
             {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
 
 {% endblock %}
