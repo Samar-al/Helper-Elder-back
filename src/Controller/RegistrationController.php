@@ -13,11 +13,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -35,75 +39,61 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register", methods="POST")
      */
-    public function register(Request $request, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository, MailerInterface $mailer): Response
     {
 
-        // decode the JSON request body
-        $data = json_decode($request->getContent(), true);
-        $password = $data['password'];
-        $errors = $validator->validate($data);
+       // getting the json of notre request
+       $json = $request->getContent();
+         
+        
+       try{
+           
+           $user = $serializer->deserialize($json, User::class, 'json');
+           
+       }catch(NotEncodableValueException $e){
+           
+           return $this->json(["error" => "Json non valide"],Response::HTTP_BAD_REQUEST);
+       }  
+      
+       $errors = $validator->validate($user);
        
-        if(count($errors) > 0){
-            //  create a array of errors
-            $errorsArray = [];
-            foreach($errors as $error){
-                // A l'index qui correspond au champs mal remplis, j'y injecte le/les messages d'erreurs
-                $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
-            }
-            return $this->json($errorsArray,Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-        // create a new user entity and form
-        $user = new User();
-        //$form = $this->createForm(RegistrationFormType::class, $user);
-        // submit the form with the decoded data
-       // $form->submit($data);
-           /* 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            ); */
-            $user->setEmail($data["email"]);
+       if(count($errors) > 0){
+          
+           $errorsArray = [];
+           foreach($errors as $error){
+               
+               $errorsArray[$error->getPropertyPath()][] = $error->getMessage();
+           }
+           return $this->json($errorsArray,Response::HTTP_UNPROCESSABLE_ENTITY);
+       }
+          
             $user->setRoles(["ROLE_USER"]);
-            $user->setLastname($data["lastname"]);
-            $user->setFirstname($data['firstname']);
-            $user->setBirthdate(\DateTime::createFromFormat('Y-m-d', $data['birthdate']));
-            $user->setGender($data["gender"]);
-            $user->setPostalCode($data['postalCode']);
-            $user->setDescription($data['description']);
-            $user->setType($data["type"]);
-            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+            $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setCreatedAt(new \DateTime('now')); 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $userRepository->add($user, true);
 
-            // generate a signed url and email it to the user
-             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('helpers.elders@gmail.com', 'Admin'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
+             // generate a signed url and email it to the user
+              $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+                 (new TemplatedEmail())
+                     ->from(new Address('helpers.elders@gmail.com', 'Admin'))
+                     ->to($user->getEmail())
+                     ->subject('Please Confirm your Email')
+                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                );
 
-            // return a JSON response with a success message
-            return new JsonResponse(['success' => true, 'message' => 'User registered successfully.']);
-       // }
+           /*  $email = (new Email())
+                ->from('helpers.elders@gmail.com')
+                ->to('helpers.elders@gmail.com')
+                ->subject('Please Confirm Your Email')
+                ->html('<p>Super email de confirmation</p>');
 
-         /* // return a JSON response with the form errors
-         $errors = [];
-         foreach ($form->getErrors(true, true) as $error) {
-             $errors[] = [
-                 'field' => $error->getOrigin()->getName(),
-                 'message' => $error->getMessage(),
-             ]; */
-        // }
-
-         return new JsonResponse(['success' => false, 'errors' => $errors], 400);
+            $mailer->send($email); */
+           
+            
+            return $this->json(
+                $user,
+                Response::HTTP_CREATED);
+     
     }
 
     /**
@@ -138,7 +128,7 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('app_register');
     }
 
-    /**
+/**
  * @Route("/csrf/token")
  */
 public function getCsrfToken(CsrfTokenManagerInterface $csrfTokenManager): JsonResponse
