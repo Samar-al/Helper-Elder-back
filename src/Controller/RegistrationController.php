@@ -15,8 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+
 
 class RegistrationController extends AbstractController
 {
@@ -30,12 +34,17 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register", methods="POST")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
 
         // decode the JSON request body
         $data = json_decode($request->getContent(), true);
 
+         // validate the CSRF token
+         $token = new CsrfToken('registration', $data['_csrf_token']);
+         if (!$csrfTokenManager->isTokenValid($token)) {
+             throw new InvalidCsrfTokenException('Invalid CSRF token.');
+         }
         // create a new user entity and form
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);

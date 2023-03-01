@@ -23,14 +23,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"posts","users", "messages", "use"})
+     * @Groups({"posts","users", "messages", "reviews"})
      *
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"posts","users"})
+     * @Groups({"posts","users", "reviews"})
      * @Assert\Email
      */
     private $email;
@@ -54,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * 
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users", "messages"})
+     * @Groups({"posts","users", "messages", "reviews"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
      * @Assert\Type("string")
@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users", "messages"})
+     * @Groups({"posts","users", "messages", "reviews"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
      * 
