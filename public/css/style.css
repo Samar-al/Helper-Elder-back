@@ -1,5 +1,6 @@
 body{
-    background-image: radial-gradient( circle,  rgba(33,103,43,1) 11.3%, rgba(117,162,61,1) 91.1% );
+    background-image: linear-gradient(to right, #0A2A18, #164A29, #0F441E);
+    background-size: cover;
 }
 
 h1{
@@ -11,6 +12,9 @@ h1{
     padding: 2rem 0.5rem;
     
 }
+h1:hover{
+    background: linear-gradient(to bottom, #d697e9, #25553F);
+}
 img.card-img-top.imgHome{
     border: 2px solid black;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
@@ -18,9 +22,10 @@ img.card-img-top.imgHome{
     background-color: rgb(228, 228, 228);
 }
 
+
 img.card-img-top.imgHome:hover{
 
-    background-image: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
+    background: linear-gradient(to bottom, #d697e9, #25553F);
     transform: scale(1.2);
 }
 
