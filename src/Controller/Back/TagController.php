@@ -26,7 +26,7 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/service/jouter", name="app_back_tag_new", methods={"GET", "POST"})
+     * @Route("/service/ajouter", name="app_back_tag_new", methods={"GET", "POST"})
      */
     public function new(Request $request, TagRepository $tagRepository): Response
     {
@@ -57,7 +57,7 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("service/{id}/edit", name="app_back_tag_edit", methods={"GET", "POST"})
+     * @Route("service/{id}/modifier", name="app_back_tag_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, Tag $tag, TagRepository $tagRepository): Response
     {
@@ -78,7 +78,7 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("service/{id}", name="app_back_tag_delete", methods={"POST"})
+     * @Route("service/{id}/supprimer", name="app_back_tag_delete", methods={"POST"})
      */
     public function delete(Request $request, Tag $tag, TagRepository $tagRepository): Response
     {

@@ -5,9 +5,9 @@
 {% block body %}
 <div class="container mt-3 mb-3">
     <h1>Ajouter une annonce</h1>
-
+    <div class="index">
     {{ include('back/post/_form.html.twig') }}
-
-    <a href="{{ path('app_back_post_index') }}">revenir à la liste des annonces</a>
+    </div>
+    <a href="{{ path('app_back_post_index') }}"><button type="button" class="btn btn-secondary my-2">revenir à la liste des annonces</button></a>
     </div>
 {% endblock %}

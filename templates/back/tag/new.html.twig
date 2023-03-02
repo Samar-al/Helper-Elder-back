@@ -5,9 +5,9 @@
 {% block body %}
 <div class="container mt-3 mb-3">
     <h1>Ajouter un service</h1>
-
+    <div class="index">
     {{ include('back/tag/_form.html.twig') }}
-
-    <a href="{{ path('app_back_tag_index') }}">revenir à la liste des services</a>
+    </div>
+    <a href="{{ path('app_back_tag_index') }}"><button type="button" class="btn btn-secondary my-3">revenir à la liste des services</button></a>
 </div>
 {% endblock %}

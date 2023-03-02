@@ -133,7 +133,7 @@ class PostController extends AbstractController
         }
 
 
-        // TODO add the post in database
+        // add the post in database
         
         $post->setSlug($post->getSlug());
         $post->setUser($this->security->getUser());

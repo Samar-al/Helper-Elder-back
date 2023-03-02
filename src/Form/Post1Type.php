@@ -25,7 +25,6 @@ class Post1Type extends AbstractType
                 ])
             ->add('postalCode')
             ->add('radius')
-            ->add('slug')
             ->add('user')
             ->add('tag')
         ;
