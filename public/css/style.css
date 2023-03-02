@@ -1,6 +1,5 @@
 body{
-    background: rgb(34,126,195);
-    background: radial-gradient(circle, rgba(34,126,195,1) 0%, rgba(124,119,119,0.8183648459383753) 100%);
+    background-image: radial-gradient( circle,  rgba(33,103,43,1) 11.3%, rgba(117,162,61,1) 91.1% );
 }
 
 h1{
@@ -21,8 +20,7 @@ img.card-img-top.imgHome{
 
 img.card-img-top.imgHome:hover{
 
-    background: rgb(34,126,195);
-    background: linear-gradient(0deg, rgba(34,126,195,1) 0%, rgba(175,38,55,0.8183648459383753) 100%);
+    background-image: linear-gradient(to right, rgb(182, 244, 146), rgb(51, 139, 147));
     transform: scale(1.2);
 }
 
@@ -47,4 +45,8 @@ div.delete{
 
 div.show{
     width: 80%;
+}
+
+div.form-group.login{
+    color: white;
 }

@@ -67,8 +67,10 @@ class PostController extends AbstractController
         $post = new Post();
         $form = $this->createForm(Post1Type::class, $post);
         $form->handleRequest($request);
-
+         
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $post->setSlug($post->getSlug());
             $post->setCreatedAt(new \DateTime());
             $postRepository->add($post, true);
 
