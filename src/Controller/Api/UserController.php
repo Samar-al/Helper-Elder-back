@@ -49,20 +49,19 @@ class UserController extends AbstractController
         }
 
     /**
-     * @Route("/api/mon-profil/modifier", name="app_api_user_edit", methods={"POST"})
+     * @Route("/api/mon-profil/{id}/modifier", name="app_api_user_edit", methods={"POST"}, requirements={"id"="\d+"})
      * @IsGranted("ROLE_USER")
-     * @IsGranted("edit", subject="user", message="Access denied")
+     * 
      */
     public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, UserRepository $userRepository): Response
     {
-
         
         // Getting the JSON of our request
         $json = $request->getContent();
 
         try {
             $user = $serializer->deserialize($json, User::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-            dd($user);
+            
         } catch (NotEncodableValueException $e) {
             
             return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
@@ -97,14 +96,16 @@ class UserController extends AbstractController
             ]
         );
     }
+
     /**
      * @Route("/api/mon-profil/supprimer", name="app_api_user_delete", methods={"POST"}) 
-     * @IsGranted("edit", subject="user", message="Access denied")
+     * 
      * @IsGranted("ROLE_USER")
      */
     public function delete(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
-        
+        $user=$this->getUser();
+        $this->denyAccessUnlessGranted("user_delete", $user);
 ;       $entityManager->remove($user);
         $entityManager->flush();
         // Return a JSON response indicating success
