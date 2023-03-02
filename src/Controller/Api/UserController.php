@@ -55,7 +55,10 @@ class UserController extends AbstractController
      */
     public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, UserRepository $userRepository): Response
     {
-        
+        if($user != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à modifier ce profil');
+        }
+
         // Getting the JSON of our request
         $json = $request->getContent();
 
@@ -98,14 +101,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/mon-profil/supprimer", name="app_api_user_delete", methods={"POST"}) 
+     * @Route("/api/mon-profil/{id}/supprimer", name="app_api_user_delete", methods={"POST"}) 
      * 
      * @IsGranted("ROLE_USER")
      */
     public function delete(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
-        $user=$this->getUser();
-        $this->denyAccessUnlessGranted("user_delete", $user);
+        if($user != $this->security->getUser()){
+            throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à supprimer ce profil');
+        }
+        
 ;       $entityManager->remove($user);
         $entityManager->flush();
         // Return a JSON response indicating success
