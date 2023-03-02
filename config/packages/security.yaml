@@ -49,6 +49,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          # ! FRONT
+        - { path: ^/back-office, roles: ROLE_ADMIN }
+        - { path: ^/api/(annonce/aidant|annonce/recherche-aide|annonce/\d+|service), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/, roles: ROLE_USER }
         
         #- { path: ^/api/annonce/aidant|recherche-aide|ajouter|\d+|, roles: ROLE_USER }
        # - { path: ^/api/annonce/\d+/(modifier|supprimer), roles: ROLE_USER }
@@ -56,7 +61,7 @@ security:
         
         # ! BACK-OFFICE
 
-        - { path: ^/back-office, roles: ROLE_ADMIN }
+        
         # !API
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
        #- { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
