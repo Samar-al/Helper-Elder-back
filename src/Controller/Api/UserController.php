@@ -115,8 +115,8 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à supprimer ce profil');
         }
 
-        $userAnonyme = $userRepository->find(221); // utlisateur anonyme
-
+        $userAnonyme = $userRepository->findOneBy(["email"=>"anonyme@anonyme.com"]); // utlisateur anonyme
+       
         // Anonymization of posts posted by the user we want to delete
         $posts = $postRepository->findBy(["user"=>$user]);
         if($posts){    
@@ -168,7 +168,7 @@ class UserController extends AbstractController
             $conversation->setUser1($userAnonyme);
         }
         }
-        
+
         // Anonymization of one the user we want te delete participating in a conversation
         $conversations = $conversationRepository->findBy(["user2"=>$user]);
         if($conversations){

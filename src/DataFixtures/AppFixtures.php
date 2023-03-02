@@ -47,6 +47,21 @@ class AppFixtures extends Fixture
         $userAdmin->setCreatedAt(new DateTime("now"));
         $userAdmin->setType(3);
         $manager->persist($userAdmin);
+
+        $userAnonyme = new User();
+        $userAnonyme->setEmail("anonyme@anonyme.com");
+        $userAnonyme->setFirstname("anonyme");
+        $userAnonyme->setLastname("anonyme");
+        $userAnonyme->setBirthdate(new DateTime("1998-09-20"));
+        $userAnonyme->setGender(1);
+        $userAnonyme->setPostalCode("00000");
+        $userAnonyme->setPassword($this->passwordHasher->hashPassword($userAnonyme, "user"));
+        $userAnonyme->setRoles(["ROLE_USER"]);
+        $userAnonyme->setDescription("Je suis anonyme! wwwwwwwwwwwwooooooooooooouuuuuuuhhhhhhhhhhhhhoooooooooooooooouuuuuuuuuuuuuuuuuu");
+        $userAnonyme->setCreatedAt(new DateTime("now"));
+        $userAnonyme->setType(1);
+        $manager->persist($userAnonyme);
+
  
         //create several users
         $populator->addEntity(User::class, 10, [
