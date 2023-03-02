@@ -2,8 +2,12 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Post;
 use App\Entity\User;
 use App\Repository\ConversationRepository;
+use App\Repository\MessageRepository;
+use App\Repository\PostRepository;
+use App\Repository\ReviewRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -105,12 +109,76 @@ class UserController extends AbstractController
      * 
      * @IsGranted("ROLE_USER")
      */
-    public function delete(User $user, EntityManagerInterface $entityManager): JsonResponse
+    public function delete(User $user, EntityManagerInterface $entityManager, PostRepository $postRepository, ReviewRepository $reviewRepository, ConversationRepository $conversationRepository, MessageRepository $messageRepository, UserRepository $userRepository): JsonResponse
     {
         if($user != $this->security->getUser()){
             throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à supprimer ce profil');
         }
+
+        $userAnonyme = $userRepository->find(221); // utlisateur anonyme
+
+        // Anonymization of posts posted by the user we want to delete
+        $posts = $postRepository->findBy(["user"=>$user]);
+        if($posts){    
+        foreach($posts as $post){
+            $post->setUser($userAnonyme);
+        }
+        }
         
+        // Anonymization of reviews posted by the user we want to delete
+        $reviewsGiven = $reviewRepository->findBy(["userGiver"=>$user]);
+        if($reviewsGiven){
+            
+        foreach($reviewsGiven as $review){
+            $review->setUserGiver($userAnonyme);
+        }
+        }
+
+        // deleting reviews received by the user we want to delete
+        $reviewsTaken = $reviewRepository->findBy(["userTaker"=>$user]);
+        if($reviewsTaken){
+        foreach($reviewsTaken as $review){
+            $reviewRepository->remove($review);
+        }
+        }
+
+        // Anonymization of messages sent by the user we want to delete
+        $messagesSent = $messageRepository->findBy(["userSender"=>$user]);
+        if($messagesSent){
+            
+        foreach($messagesSent as $message){
+            $message->setUserSender($userAnonyme);
+        }
+        }
+
+        // Anonymization of messages received by the user we want to delete
+        $messagesReceived = $messageRepository->findBy(["userRecipient"=>$user]);
+        if($messagesReceived){
+            
+        foreach($messagesReceived as $message){
+            $message->setUserRecipient($userAnonyme);
+        }
+        }
+        
+        // Anonymization of one the user we want te delete participating in a conversation
+        $conversations = $conversationRepository->findBy(["user1"=>$user]);
+        if($conversations){
+            
+        foreach($conversations as $conversation){
+            $conversation->setUser1($userAnonyme);
+        }
+        }
+        
+        // Anonymization of one the user we want te delete participating in a conversation
+        $conversations = $conversationRepository->findBy(["user2"=>$user]);
+        if($conversations){
+            
+        foreach($conversations as $conversation){
+            $conversation->setUser2($userAnonyme);
+        }
+        }
+        
+
 ;       $entityManager->remove($user);
         $entityManager->flush();
         // Return a JSON response indicating success
