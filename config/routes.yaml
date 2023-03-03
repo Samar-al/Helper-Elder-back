@@ -1,3 +1,12 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+api_login_check:
+    path: /api/login_check
+app_logout:
+    path: /logout
+    methods: GET
+registration:
+  path: /inscription
+  controller: App\Controller\RegistrationController::register
+  

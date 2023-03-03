@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+<div class="container mt-3 mb-3">
+    <h1>Ajouter un utilisateur</h1>
+    <div class="index">
+    {{ include('back/user/_form.html.twig') }}
+    </div>
+    <a href="{{ path('app_back_user_index') }}"><button type="button" class="btn btn-secondary my-3">revenir à la liste des utilisateurs</button></a>
+</div>
+{% endblock %}

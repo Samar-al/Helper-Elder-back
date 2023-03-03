@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bonjour{% endblock %}
+
+{% block body %}
+<div class="container" id="home">
+  <h1>Bienvenue dans l'arrière boutique</h1> 
+  <div class="dashboard">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+  <div class="col">
+    <div class="card h-100 w-50 icon">
+       <a href="{{path('app_back_user_index')}}"><img src="{{asset('images/free_icon_1.svg')}}" class="card-img-top imgHome" alt="user icon"></a>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100 w-50 icon">
+      <a href="{{path('app_back_post_index')}}"><img src="{{asset('images/free_icon_2.svg')}}" class="card-img-top imgHome" alt="post icon"></a>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100 w-50 icon">
+    <a href="{{path('app_back_tag_index')}}"><img src="{{asset('images/free_icon_3.svg')}}" class="card-img-top imgHome" alt="tags icon"></a>  
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+{% endblock %}

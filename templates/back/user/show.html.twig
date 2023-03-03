@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>User</h1>
+    <div class="index">
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+                <th>Roles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ user.password }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ user.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
+            </tr>
+            <tr>
+                <th>Birthdate</th>
+                <td>{{ user.birthdate ? user.birthdate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>{% if user.gender is same as 1 %}Homme{% elseif user.gender is same as 2 %}Femme{% endif %}</td> 
+                
+            </tr>
+            <tr>
+                <th>PostalCode</th>
+                <td>{{ user.postalCode }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ user.description }}</td>
+            </tr>
+            <tr>
+                <th>AvgRating</th>
+                <td>{{ user.avgRating }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{% if user.type is same as 1 %}Elder{% elseif user.type is same as 2 %}Helper{% elseif user.type is same as 3 %}Admin{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Picture</th>
+                <td><img src="{{ user.picture }}" alt="" width="100" heigh="100"></td> 
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    <a href="{{ path('app_back_user_index') }}"><button type="button" class="btn btn-secondary">Retour à la liste</button></a>
+
+    <a href="{{ path('app_back_user_edit', {'id': user.id}) }}"><button type="button" class="btn btn-secondary">Modifier</button></a>
+
+    {{ include('back/user/_delete_form.html.twig') }}
+    </div>
+{% endblock %}
