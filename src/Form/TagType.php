@@ -6,8 +6,11 @@ use App\Entity\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\HttpFoundation\File\File;
+
 
 class TagType extends AbstractType
 {
@@ -26,12 +29,13 @@ class TagType extends AbstractType
                     "placeholder" => "Description du service"
                 ]
             ])
-            ->add('logo', TextType::class,[
+            ->add('logo', UrlType::class,[
                 "label" => "Logo",
                 "attr" => [
                     "placeholder" => "Envoyer votre logo"
                 ]
             ])
+            
 
         ;
     }

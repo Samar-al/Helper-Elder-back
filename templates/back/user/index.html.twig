@@ -38,13 +38,13 @@
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
                     <!--  <td>{{ user.birthdate ? user.birthdate|date('d-m-Y') : '' }}</td>  --> 
-                    <td>{{ user.gender }}</td>
+                    <td>{{ user.gender ? "Homme" : "Femme" }}</td>
                     <td>{{ user.postalCode }}</td>
                     <!-- <td>{{ user.description|slice(0,20)}} ...</td>  --> 
                     <td>{{ user.avgRating }}</td>
                     <td>{{ user.createdAt ? user.createdAt|date('d-m-Y') : '' }}</td>
                     <!-- <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td> -->
-                    <td>{{ user.type }}</td>
+                    <td>{% if user.type is same as 1 %}Elder{% elseif user.type is same as 2 %}Helper{% elseif user.type is same as 3 %}Admin{% endif %}</td>
                     <!-- <td>{{ user.picture }}</td> -->
                     <td>
                         <a class="btn btn-secondary" href="{{ path('app_back_user_show', {'id': user.id}) }}"><i class="bi bi-eye"></i></a>

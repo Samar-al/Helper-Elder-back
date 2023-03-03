@@ -38,7 +38,8 @@
             </tr>
             <tr>
                 <th>Gender</th>
-                <td>{{ user.gender }}</td>
+                <td>{% if user.gender is same as 1 %}Homme{% elseif user.gender is same as 2 %}Femme{% endif %}</td> 
+                
             </tr>
             <tr>
                 <th>PostalCode</th>
@@ -62,11 +63,11 @@
             </tr>
             <tr>
                 <th>Type</th>
-                <td>{{ user.type }}</td>
+                <td>{% if user.type is same as 1 %}Elder{% elseif user.type is same as 2 %}Helper{% elseif user.type is same as 3 %}Admin{% endif %}</td>
             </tr>
             <tr>
                 <th>Picture</th>
-                <td>{{ user.picture }}</td>
+                <td><img src="{{ user.picture }}" alt="" width="100" heigh="100"></td> 
             </tr>
         </tbody>
     </table>
