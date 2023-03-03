@@ -35,6 +35,7 @@ class TagController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tag->setCreatedAt(new \DateTime('now'));
             $tagRepository->add($tag, true);
 
             return $this->redirectToRoute('app_back_tag_index', [], Response::HTTP_SEE_OTHER);
