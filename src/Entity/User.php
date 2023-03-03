@@ -458,7 +458,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getReviewsTaker(): Collection
     {
-        return $this->reviewsTaker;
+        return $this->reviewsTaker ?? new ArrayCollection();
     }
 
     public function addReviewsTaker(Review $reviewsTaker): self

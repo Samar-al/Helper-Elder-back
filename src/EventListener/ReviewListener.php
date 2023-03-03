@@ -21,22 +21,28 @@ class ReviewListener {
         // checking the user's reviews
         $user = $review->getUserTaker();
         $reviews = $user->getReviewsTaker();
-            
+        
+        if(!$reviews){
+           return; 
+        }
             $allNotes = null;
-
+            
             // adding all notes of reviews
             foreach($reviews as $review){
                 $allNotes += $review->getRate();
             }
-
+            
             // Calculating the average of rates
-            $rating = $allNotes / count($reviews);
+            if(count($reviews) != 0){
 
-            // Setting the avg_rating in database
-            $user->setAvgRating(round($rating,1));
-
-            // Flush
-            $this->entityManager->flush();
+                $rating = $allNotes / count($reviews);
+                
+                // Setting the avg_rating in database
+                $user->setAvgRating(round($rating,1));
+                
+                // Flush
+                $this->entityManager->flush();
+            }
 
     }
 }
