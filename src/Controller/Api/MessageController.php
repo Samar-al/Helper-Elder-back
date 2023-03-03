@@ -70,7 +70,7 @@ class MessageController extends AbstractController
         $user1 = $data['userSender'];
         $user2n = $data['userRecipient'];
         
-        $this->denyAccessUnlessGranted("conversation_view", $data);
+        
         $errors = $validator->validate($data);
 
         if(count($errors) > 0){
@@ -95,10 +95,11 @@ class MessageController extends AbstractController
             $conversation->setUser2($user2);
             $conversation->setTitle($title);
             $conversation->setCreatedAt(new \DateTime());
+            $this->denyAccessUnlessGranted("conversation_view", $conversation);
             $conversationRepository->add($conversation, true);
             
         }
-
+        $this->denyAccessUnlessGranted("conversation_view", $conversation);
         // Create a new message and add it to the conversation
         $conversation->setUpdatedAt(new \DateTime());
         $message = new Message();
@@ -107,6 +108,7 @@ class MessageController extends AbstractController
         $message->setUserSender($this->security->getUser());
         $message->setUserRecipient($user2);
         $message->setCreatedAt(new \DateTime());
+        
         $messageRepository->add($message, true);
 
 
