@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="json")
      * @Assert\Type("array")
-     * @Groups({"messages"})
+     * @Groups({"messages", "reviews"})
      * 
      */
     private $roles = [];
@@ -127,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
-     * @Groups({"posts","users", "reviews"})
+     * @Groups({"posts","users"})
      */
     private $reviewsGiver;
 

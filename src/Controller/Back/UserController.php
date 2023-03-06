@@ -12,6 +12,7 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -33,13 +34,15 @@ class UserController extends AbstractController
     /**
      * @Route("/utilisateur/ajouter", name="app_back_user_add", methods={"GET", "POST"})
      */
-    public function add(Request $request, UserRepository $userRepository): Response
+    public function add(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+           
+            $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setCreatedAt(new \DateTime('now'));
             $userRepository->add($user, true);
 
@@ -63,14 +66,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("utilisateur/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
+     * @Route("/utilisateur/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setUpdatedAt(new \DateTime());
             $userRepository->add($user, true);
 
