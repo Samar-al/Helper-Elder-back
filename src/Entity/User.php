@@ -37,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Assert\Type("array")
+     * 
      * @Groups({"messages", "reviews"})
      * 
      */
@@ -237,7 +237,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        //$roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
@@ -458,7 +458,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getReviewsTaker(): Collection
     {
-        return $this->reviewsTaker;
+        return $this->reviewsTaker ?? new ArrayCollection();
     }
 
     public function addReviewsTaker(Review $reviewsTaker): self

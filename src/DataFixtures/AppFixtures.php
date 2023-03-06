@@ -105,18 +105,22 @@ class AppFixtures extends Fixture
         
         // !TAG
         //create tags
-        $populator->addEntity(Tag::class, 15, [
-            "name" => function () use ($faker) {
-                return $faker->words(2, true);
+        $tagsName = ["Actes médicaux", "Chauffeur", "Compagnie", "Courses", "Cuisine", "Ménage", "Toilette"];
+        $tagsLogo = ["img/actes-medicaux.png", "img/chauffeur.png", "img/compagnie.png", "img/courses.png", "img/cuisine.png", "img/ménage.png", "img/toilette.png"];
+        $populator->addEntity(Tag::class, 7, [
+            "name" => function () use ($tagsName) {
+                static $index = 0;
+                return $tagsName[$index++];
             },
             "description" => function () use ($faker) {
                 return $faker->text(100);
             },
-            "logo" => function () use ($faker) {
-                return "https://picsum.photos/id/" . $faker->numberBetween(1, 200) . "/100/100";
+            "logo" => function () use ($tagsLogo) {
+                static $index = 0;
+                return $tagsLogo[$index++];
             },
             "createdAt" => function () use ($faker) {
-                return $faker->dateTime();
+                return $faker->dateTime('now');
             },
             "updatedAt" => function () use ($faker) {
                 return null;
