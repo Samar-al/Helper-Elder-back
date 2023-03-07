@@ -108,6 +108,7 @@ class MessageController extends AbstractController
         $message->setUserSender($this->security->getUser());
         $message->setUserRecipient($user2);
         $message->setCreatedAt(new \DateTime());
+        
         $messageRepository->add($message, true);
 
 
