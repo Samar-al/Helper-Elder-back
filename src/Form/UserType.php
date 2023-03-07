@@ -99,13 +99,16 @@ class UserType extends AbstractType
             ])
             ->add('picture', FileType::class, [
                 'label' => 'Votre image *',
-                'required' => false,
-                "attr" => [
-                    "placeholder" => "Votre image"
+                'attr' => [
+                    'placeholder' => 'Votre image'
                 ],
-                "help"=> "* L'url d'une image"
+                'required' => false,
+                'help' => '* L\'url d\'une image',
+                'data_class' => null, // Set data_class to null
+                'empty_data' => '',
             ])
-
+            ->get('picture')
+            ->addModelTransformer(new FileTypeTransformer($options['picture_directory']));    
         ;
     }
 
