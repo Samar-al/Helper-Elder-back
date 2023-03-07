@@ -43,7 +43,7 @@ class Post1Type extends AbstractType
                     "Ponctuel" => true,
                     "Régulier" => false,
                 ],
-                "label" => "Ponctuel ou regulier" 
+                "label" => "Ponctuel ou regulier", 
                 ])
             ->add('postalCode',  TextType::class)
             ->add('radius', IntegerType::class)
@@ -55,7 +55,7 @@ class Post1Type extends AbstractType
                 "expanded" => true,
                 "help" => "* Vous pouvez choisir plusieurs tag"
             ] )
-        ;
+    ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
