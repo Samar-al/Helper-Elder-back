@@ -43,7 +43,7 @@ class ConversationRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
                 SELECT conversation.* FROM conversation 
-                ON conversation.user1_id ='.$id.'
+                WHERE conversation.user1_id ='.$id.'
                 OR conversation.user2_id ='.$id;
         
         $stmt = $conn->prepare($sql);
