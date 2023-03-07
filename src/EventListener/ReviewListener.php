@@ -23,14 +23,17 @@ class ReviewListener {
         $reviews = $user->getReviewsTaker();
         
         if(!$reviews){
-           return; 
-        }
+
+            return; 
+         }
+
             $allNotes = null;
             
             // adding all notes of reviews
             foreach($reviews as $review){
                 $allNotes += $review->getRate();
             }
+
             
             // Calculating the average of rates
             if(count($reviews) != 0){
@@ -45,4 +48,5 @@ class ReviewListener {
             }
 
     }
+
 }

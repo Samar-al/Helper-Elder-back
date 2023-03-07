@@ -41,6 +41,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+           
             $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setCreatedAt(new \DateTime('now'));
             $userRepository->add($user, true);
@@ -65,7 +66,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("utilisateur/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
+     * @Route("/utilisateur/{id}/edit", name="app_back_user_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
     {
@@ -73,6 +74,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $user->setPassword($userPasswordHasher->hashPassword($user, $user->getPassword()));
             $user->setUpdatedAt(new \DateTime());
             $userRepository->add($user, true);

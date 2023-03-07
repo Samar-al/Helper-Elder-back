@@ -37,8 +37,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Assert\Type("array")
-     * @Groups({"messages"})
+     * 
+     * @Groups({"messages", "reviews"})
      * 
      */
     private $roles = [];
@@ -127,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Review::class, mappedBy="userGiver")
-     * @Groups({"posts","users", "reviews"})
+     * @Groups({"posts","users"})
      */
     private $reviewsGiver;
 
@@ -237,7 +237,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        //$roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
