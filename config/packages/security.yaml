@@ -51,7 +51,7 @@ security:
          # ! FRONT
         - { path: ^/back-office, roles: ROLE_ADMIN }
         - { path: ^/api/(annonce/aidant|annonce/recherche-aide|annonce/\d+|service), roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connexion, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/, roles: ROLE_USER }
         

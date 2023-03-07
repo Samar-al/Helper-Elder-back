@@ -86,4 +86,16 @@ class ReviewController extends AbstractController
             ]
         );
     } 
+
+     /**
+     * @Route("/api/avis/{id}", name="app_api_review_getOneById", methods={"GET"}, requirements={"id"="\d+"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function getOne(Review $review): Response
+    {
+
+        // Returns a Json with first argument data and 2nd argument the status code
+        return $this->json($review,Response::HTTP_OK,[],["groups" => "reviews"]);
+    }
+
 }

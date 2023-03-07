@@ -50,12 +50,14 @@ class Review
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviews")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"reviews"})
      */
     private $userGiver;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="reviewsTaker")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"reviews"})
      */
     private $userTaker;
 
