@@ -53,8 +53,7 @@ class Post
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"posts"})
-     * @Assert\NotBlank
-     * @Assert\Type("boolean")
+     * 
      */
     private $workType;
 
