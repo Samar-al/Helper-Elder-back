@@ -37,6 +37,14 @@
                 <td>{{ post.radius }} km</td>
             </tr>
             <tr>
+                <th>Service(s)</th>
+                 <td>
+                {% for tag in post.tag %}
+                 {{ tag.name }},
+                {% endfor %}
+                </td> 
+            </tr>
+            <tr>
                 <th>Slug</th>
                 <td>{{ post.slug }}</td>
             </tr>
