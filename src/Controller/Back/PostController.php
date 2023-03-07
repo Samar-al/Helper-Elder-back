@@ -5,6 +5,9 @@ namespace App\Controller\Back;
 use App\Entity\Post;
 use App\Form\Post1Type;
 use App\Repository\PostRepository;
+use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\Query\Expr\Orx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,20 +47,14 @@ class PostController extends AbstractController
             'posts' => $postRepository->findAll(),
         ]);
     }
-
-     /**
-     * @Route("/recherche-titre", name="app_back_post_list")
+ 
+    /**
+     * @Route("/recherche", name="app_back_post_search", methods="GET")
      */
-    public function list(PostRepository $postRepository, Request $request, HttpClientInterface $client): Response
+   /*  public function list(UserRepository $userRepository, PostRepository $postRepository, TagRepository $tagRepository, Request $request): Response
     {
-
         
-        $posts = $postRepository->findAllOrderByTitleSearch($request->get("search"));
-
-        return $this->render('back/post/index.html.twig', [
-            'posts' => $posts,
-        ]);
-    }
+    }  */
 
     /**
      * @Route("/annonce/ajouter", name="app_back_post_new", methods={"GET", "POST"})
