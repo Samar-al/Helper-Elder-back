@@ -85,6 +85,7 @@ class PostController extends AbstractController
      */
     public function show(Post $post): Response
     {
+       
         return $this->render('back/post/show.html.twig', [
             'post' => $post,
         ]);
