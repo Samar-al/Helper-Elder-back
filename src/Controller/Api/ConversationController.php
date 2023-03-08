@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Conversation;
 use App\Entity\User;
 use App\Repository\ConversationRepository;
+use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,12 +23,27 @@ class ConversationController extends AbstractController
      * @Route("api/mon-profil/conversation", name="app_api_conversation_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
-    public function index(ConversationRepository $conversationRepository): JsonResponse
+    public function index(ConversationRepository $conversationRepository, UserRepository $userRepository, MessageRepository $messageRepository): JsonResponse
     {
     
         $conversations = $conversationRepository->findConversationByUserId($this->getUser());
         // Return a Json with data and status code
-        return $this->json($conversations, Response::HTTP_OK,[], ["groups" => "users"]); 
+        $users=[];
+        $latestMessage = [];
+        foreach($conversations as $conversation){
+
+           $user1 = $userRepository->find($conversation["user1_id"]);
+           $users[] = $user1;
+           $user2 = $userRepository->find($conversation["user2_id"]);
+           $users[] = $user2;
+
+           $message = $messageRepository->findLastMessageByConversationId($conversation["id"]);
+           $latestMessage[] = $message;
+        }
+      
+        
+        return $this->json([$conversations, $users, $latestMessage], Response::HTTP_OK,[], ["groups" => "conversations"]); 
+    
     
     }
 
