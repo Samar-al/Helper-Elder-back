@@ -38,15 +38,25 @@
                 <a class="nav-link {% if "tag" in app.request.get("{{path('app_logout')}}") %} active {% endif %}" href="{{path('app_logout')}}">Déconnexion</a>
                 </li>
             </ul>
-            <form class="d-flex" action="#">
+            <form class="d-flex" action="{{path("app_back_user_search")}}" method="GET">
                 <input class="form-control me-sm-2" type="search" placeholder="Recherche">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Trouver</button>
             </form>
-        </div>
-    </div>
+                </div>
+            </div>
     </nav>    
         {% block body %}
-        
+        {% if results|length > 0 %}
+            <h2>Search results for "{{ term }}"</h2>
+
+            <ul>
+                {% for result in results %}
+                    <li>{{ result.firstname }} {{ result.lastname }} - {{ result.title|length }} posts</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found for "{{ term }}".</p>
+        {% endif %}
 
 
    

@@ -236,24 +236,7 @@ class AppFixtures extends Fixture
             $user->setRoles(["ROLE_USER"]);
             $manager->persist($user);       
         }
-         // Creating messages array
-         $conversations = [];
-
-         // putting posts in post array, with the help of $insertedItems variable
-         foreach ($insertedItems["App\Entity\Conversation"] as $conversation) {
-             // construct calling for some obscur reason
-             $conversation->__construct();
-             $conversations[] = $conversation;
-         }
-         foreach ($insertedItems["App\Entity\Message"] as $message) {
-             // construct calling for some obscur reason
-            
- 
-             // Get randomly generated index
-             $randIndex = array_rand($conversations);
-             // adding this post to a tag
-             $message->setConversation($conversations[$randIndex]);
-         }
+        
         
          // Creating messages array
          $messages = [];
@@ -274,6 +257,43 @@ class AppFixtures extends Fixture
             // adding this post to a tag
             $user->addMessagesSender($messages[$randIndex]);
         }
+
+         // Creating messages array
+         $conversations = [];
+
+         // putting posts in post array, with the help of $insertedItems variable
+         foreach ($insertedItems["App\Entity\Conversation"] as $conversation) {
+             // construct calling for some obscur reason
+             $conversation->__construct();
+             $conversations[] = $conversation;
+         }
+
+         // Assigning conversations to messages
+            foreach ($insertedItems["App\Entity\Message"] as $message) {
+                // Get the userSender and userRecipient of the message
+                $userSender = $message->getUserSender();
+                $userRecipient = $message->getUserRecipient();
+                
+                // Iterate through the conversations to find a match
+                foreach ($conversations as $conversation) {
+                    // Get the user1 and user2 of the conversation
+                    $user1 = $conversation->getUser1();
+                    $user2 = $conversation->getUser2();
+
+                    // Check if the conversation includes the sender or recipient of the message
+                    if (($user1 === $userSender && $user2 === $userRecipient) || ($user2 === $userSender && $user1 === $userRecipient)) {
+                        // Assign the conversation to the message
+                        $message->setConversation($conversation);
+                        break; // exit the loop once a match is found
+                    }
+                }
+
+            /* 
+             // Get randomly generated index
+             $randIndex = array_rand($conversations);
+             // adding this post to a tag
+             $message->setConversation($conversations[$randIndex]); */
+         }
 /* 
          // Creating messages array
         $reviews = [];

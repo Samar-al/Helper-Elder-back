@@ -48,14 +48,7 @@ class PostController extends AbstractController
         ]);
     }
  
-    /**
-     * @Route("/recherche", name="app_back_post_search", methods="GET")
-     */
-   /*  public function list(UserRepository $userRepository, PostRepository $postRepository, TagRepository $tagRepository, Request $request): Response
-    {
-        
-    }  */
-
+    
     /**
      * @Route("/annonce/ajouter", name="app_back_post_new", methods={"GET", "POST"})
      */
