@@ -19,7 +19,7 @@ class ConversationController extends AbstractController
 {
     
     
-    /**
+   /**
      * @Route("api/mon-profil/conversation", name="app_api_conversation_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
@@ -41,9 +41,8 @@ class ConversationController extends AbstractController
            $latestMessage[] = $message;
         }
       
-        
-        return $this->json([$conversations, $users, $latestMessage], Response::HTTP_OK,[], ["groups" => "conversations"]); 
-    
+       
+        return $this->json([$conversations, $latestMessage, $users], Response::HTTP_OK,[], ["groups" => "conversations"]); 
     
     }
 
