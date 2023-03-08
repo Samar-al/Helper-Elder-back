@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conversation;
+use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -85,6 +86,8 @@ class ConversationRepository extends ServiceEntityRepository
         ->getOneOrNullResult();
         ;
     }
+
+
 
 //    public function findOneBySomeField($value): ?Conversation
 //    {
