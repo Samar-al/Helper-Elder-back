@@ -38,7 +38,7 @@
                 <a class="nav-link {% if "tag" in app.request.get("{{path('app_logout')}}") %} active {% endif %}" href="{{path('app_logout')}}">Déconnexion</a>
                 </li>
             </ul>
-            <form class="d-flex" action="{{path("app_back_user_search")}}" method="GET">
+            <form class="d-flex" action="{{path("app_back_post_search")}}" method="GET">
                 <input class="form-control me-sm-2" type="search" placeholder="Recherche">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Trouver</button>
             </form>

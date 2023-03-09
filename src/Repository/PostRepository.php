@@ -57,7 +57,20 @@ class PostRepository extends ServiceEntityRepository
         
     }
 
-
+    /**
+     * 
+     * @return Post[] Returns an array of Movie objects ordered by title
+     */
+    public function findAllPostsBySearch($needle = null){
+        // Quand on créer requpete personnalisé avec le builder , on utilise la ligne ci-dessous
+        return $this->createQueryBuilder('p')
+            ->orderBy("p.title")
+            ->where("p.title LIKE :needle")
+            ->setParameter("needle","%$needle%")
+            ->getQuery()
+            ->getResult();
+    }
+     
 
 //    public function findOneBySomeField($value): ?Post
 //    {

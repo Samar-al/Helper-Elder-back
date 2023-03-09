@@ -117,5 +117,18 @@ class PostController extends AbstractController
         return $this->redirectToRoute('app_back_post_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * @Route("/annonce/recherche", name="app_back_post_search", methods="GET")
+     */
+    public function search(Request $request, PostRepository $postRepository): Response
+    {
+        $results = $postRepository->findAllPostsBySearch($request->get("search"));
+        
+        return $this->render('base.html.twig', [
+            'results' => $results,
+            
+        ]);
+    }
+
    
 }
