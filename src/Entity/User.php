@@ -170,7 +170,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"posts","users", "reviews", "conversation", "messages"})
+     * @Groups({"posts","users", "reviews", "conversations", "messages"})
      */
     private $picture;
 
