@@ -23,7 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"posts","users", "messages", "reviews"})
+     * @Groups({"posts","users", "messages", "reviews", "conversations"})
      *
      */
     private $id;
@@ -47,14 +47,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"posts","users"})
-     * 
+     * @Assert\NotBlank
+     * @Assert\Length(min=6, max=255)
+     * @Assert\Regex( pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et comporter au moins 6 caractères ! ")
      */
     private $password;
 
     /**
      * 
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users", "messages", "reviews"})
+     * @Groups({"posts","users", "messages", "reviews", "conversations"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
      * @Assert\Type("string")
@@ -63,7 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"posts","users", "messages", "reviews"})
+     * @Groups({"posts","users", "messages", "reviews", "conversations"})
      * @Assert\NotBlank
      * @Assert\Length(min = 1, max = 60)
      * 
@@ -170,7 +172,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"posts","users", "reviews"})
+     * @Groups({"posts","users", "reviews", "conversations", "messages"})
      */
     private $picture;
 

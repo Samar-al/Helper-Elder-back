@@ -216,6 +216,7 @@ class AppFixtures extends Fixture
             // construct calling for some obscur reason
             $post->__construct();
             $posts[] = $post;
+            $post->setSlug($post->getSlug());
         }
 
         // Iterating on tags and adding randomly to each tag a post
