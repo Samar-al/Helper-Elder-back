@@ -39,6 +39,7 @@ security:
             entry_point: form_login
             logout:
                 path: app_logout
+                target: /api
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
