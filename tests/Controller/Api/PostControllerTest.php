@@ -32,24 +32,10 @@ class PostControllerTest extends WebTestCase
     public function testEditPost(): void
     {
 
-       /*   $id = 552;
-        $crawler = $client->request('POST', '/api/annonce/'.$id.'/modifier'); */
-
-       /*  $crawler = $client->submitForm('review_Envoyer', [
-            'post[title]' => 'Sam',
-            'post[content]'=> 'sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
-            'post[hourlyRate]'=> '10',
-            'post[workType]' => '3',
-            'post[tag][1]'=> '1',
-            'post[postalCode]'=> '75000',
-            'post[slug]'=> 'helllooooo',
-            'post[radius]'=> '5',
-            'post[user]'=> $client,
-
-        ]); */
+      
         $this->logIn();
 
-        //$user = $this->client->getContainer()->get('security.token_storage')->getToken()->getUser();
+       
 
 
          // create a test post
@@ -94,19 +80,24 @@ class PostControllerTest extends WebTestCase
         // assert response
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertEquals('application/json', $this->client->getResponse()->headers->get('Content-Type'));
-        //dd($this->client->getResponse()->getContent());
+        
         // assert post was updated
 
         /** @var Post $updatedPost */ 
       
         $updatedPost = $entityManager->getRepository(Post::class)->find($post->getId());
-       // dd($updatedPost);
+       
         $this->assertEquals($postData['title'], $updatedPost->getTitle());
         $this->assertEquals($postData['content'], $updatedPost->getContent());
         $this->assertEquals($postData['hourlyRate'], $updatedPost->getHourlyRate());
         $this->assertEquals($postData['workType'], $updatedPost->isWorkType());
         $this->assertEquals($postData['postalCode'], $updatedPost->getPostalCode());
         $this->assertEquals($postData['radius'], $updatedPost->getRadius());
-       // $this->assertEquals($postData['tag'], $updatedPost->getTag());
+        $data=[]; 
+        foreach($updatedPost->getTag() as $tag){
+            $data[]=$tag->getId();
+        }
+        
+        $this->assertEquals($postData['tag'], $data);
     }
 }
