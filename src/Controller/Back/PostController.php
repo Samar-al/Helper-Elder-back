@@ -49,12 +49,29 @@ class PostController extends AbstractController
     }
  
     /**
-     * @Route("/recherche", name="app_back_post_search", methods="GET")
+     * @Route("/search", name="post_search")
      */
-   /*  public function list(UserRepository $userRepository, PostRepository $postRepository, TagRepository $tagRepository, Request $request): Response
+    public function search(Request $request, PostRepository $postRepository, UserRepository $userRepository, TagRepository $tagRepository)
     {
+        $query = $request->query->get('query');
         
-    }  */
+        // Search for posts that match the query
+        $posts = $postRepository->searchPosts($query);
+      
+        // Search for users that match the query
+        $users = $userRepository->searchUsers($query);
+
+        // Search for tags that match the query
+        $tags = $tagRepository->searchTags($query);
+
+        return $this->render('base.html.twig', [
+            'query' => $query,
+            'posts' => $posts,
+            'users' => $users,
+            'tags' => $tags,
+        ]);
+    }
+
 
     /**
      * @Route("/annonce/ajouter", name="app_back_post_new", methods={"GET", "POST"})

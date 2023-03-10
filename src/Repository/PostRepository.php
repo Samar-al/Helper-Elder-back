@@ -57,6 +57,22 @@ class PostRepository extends ServiceEntityRepository
         
     }
 
+    public function searchPosts($query){
+        
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT post.* FROM post 
+            WHERE post.title LIKE \'%' . $query . '%\'
+            OR post.content LIKE \'%' . $query . '%\''
+        ;
+        
+        $stmt = $conn->prepare($sql);
+        
+        $resultSet = $stmt->executeQuery();
+
+        // returns the result
+        return $resultSet->fetchAllAssociative();
+    }
 
 
 //    public function findOneBySomeField($value): ?Post
