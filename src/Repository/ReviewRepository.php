@@ -39,6 +39,21 @@ class ReviewRepository extends ServiceEntityRepository
         }
     }
 
+
+    public function findReviewByUserTakerId($id){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT review.* FROM review 
+            WHERE review.user_taker_id =' .$id.''
+        ;
+        
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+
+         // returns the result
+         return $resultSet->fetchAllAssociative();
+    }
+
 //    /**
 //     * @return Review[] Returns an array of Review objects
 //     */
