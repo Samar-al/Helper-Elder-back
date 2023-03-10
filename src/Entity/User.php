@@ -47,7 +47,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"posts","users"})
-     * 
+     * @Assert\NotBlank
+     * @Assert\Length(min=6, max=255)
+     * @Assert\Regex( pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et comporter au moins 6 caractères ! ")
      */
     private $password;
 
