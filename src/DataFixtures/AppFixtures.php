@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
         $userAdmin->setBirthdate(new DateTime("1998-09-20"));
         $userAdmin->setGender(1);
         $userAdmin->setPostalCode("60320");
-        $userAdmin->setPassword($this->passwordHasher->hashPassword($userAdmin, "admin"));
+        $userAdmin->setPassword($this->passwordHasher->hashPassword($userAdmin, "Admin66"));
         $userAdmin->setRoles(["ROLE_ADMIN"]);
         $userAdmin->setDescription("Je suis le super admin! wwwwwwwwwwwwooooooooooooouuuuuuuhhhhhhhhhhhhhoooooooooooooooouuuuuuuuuuuuuuuuuu");
         $userAdmin->setCreatedAt(new DateTime("now"));
@@ -55,7 +55,7 @@ class AppFixtures extends Fixture
         $userAnonyme->setBirthdate(new DateTime("1998-09-20"));
         $userAnonyme->setGender(1);
         $userAnonyme->setPostalCode("00000");
-        $userAnonyme->setPassword($this->passwordHasher->hashPassword($userAnonyme, "user"));
+        $userAnonyme->setPassword($this->passwordHasher->hashPassword($userAnonyme, "User66"));
         $userAnonyme->setRoles(["ROLE_USER"]);
         $userAnonyme->setDescription("Je suis anonyme! wwwwwwwwwwwwooooooooooooouuuuuuuhhhhhhhhhhhhhoooooooooooooooouuuuuuuuuuuuuuuuuu");
         $userAnonyme->setCreatedAt(new DateTime("now"));
@@ -233,7 +233,7 @@ class AppFixtures extends Fixture
         foreach($insertedItems["App\Entity\User"] as $user){
             // J'appelle le constructeur car pour une raison très sombre il n'est pas appellé 
             $user->__construct();
-            $user->setPassword($this->passwordHasher->hashPassword($user, 'user'));
+            $user->setPassword($this->passwordHasher->hashPassword($user, 'User66'));
             $user->setRoles(["ROLE_USER"]);
             $manager->persist($user);       
         }
