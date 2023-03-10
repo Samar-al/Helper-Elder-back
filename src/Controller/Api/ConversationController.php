@@ -32,9 +32,9 @@ class ConversationController extends AbstractController
         $latestMessage = [];
         foreach($conversations as $conversation){
 
-           $user1 = $userRepository->find($conversation["user1_id"]);
-           
+           $user1 = $userRepository->find($conversation["user1_id"]);     
            $user2 = $userRepository->find($conversation["user2_id"]);
+           
            if($user1 !== $this->getUser()){
             $users[]=$user1;
            }
@@ -42,11 +42,11 @@ class ConversationController extends AbstractController
             $users[]=$user2;
            }
 
+
            $message = $messageRepository->findLastMessageByConversationId($conversation["id"]);
            $latestMessage[] = $message;
         }
       
-       
         return $this->json([$conversations, $users, $latestMessage], Response::HTTP_OK,[], ["groups" => "conversations"]); 
     
     }

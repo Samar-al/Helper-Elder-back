@@ -42,6 +42,7 @@ class EntityDenormalizer implements DenormalizerInterface
     public function denormalize($data, $class, $format = null, array $context = [])
     {
         // Raccourci depuis l'EntityManager pour aller checher une entité
+        
         return $this->em->find($class, $data);
     }
 }
