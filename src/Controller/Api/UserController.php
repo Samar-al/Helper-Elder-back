@@ -57,7 +57,7 @@ class UserController extends AbstractController
      * @IsGranted("ROLE_USER")
      * 
      */
-    public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine, UserRepository $userRepository, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function edit(User $user, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ManagerRegistry $doctrine): Response
     {
         if($user != $this->security->getUser()){
             throw $this->createAccessDeniedException('Access denied: Vous n\'êtes pas autorisé à modifier ce profil');
