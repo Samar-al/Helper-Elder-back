@@ -8,6 +8,7 @@ use App\Repository\PostRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,7 +44,7 @@ class PostController extends AbstractController
     {
         $users = $userRepository->findBy(['type'=>2]);
         if(!$users){
-            return $this->json(["error" => "Il n'y àDaily pas d'utilisateur Helpers pour le moment"],Response::HTTP_NOT_FOUND);
+            return $this->json(["error" => "Il n'y à pas d'utilisateur Helpers pour le moment"],Response::HTTP_NOT_FOUND);
         }
         $posts = [];
         foreach($users as $user){
@@ -165,14 +166,15 @@ class PostController extends AbstractController
 
         // Getting the JSON of our request
         $json = $request->getContent();
-
+        
         try {
-            $post = $serializer->deserialize($json, Post::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $post]);
-        } catch (NotEncodableValueException $e) {
-            return $this->json(["error" => "JSON non valide"], Response::HTTP_BAD_REQUEST);
+           $post = $serializer->deserialize($json, Post::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $post]);
+         
+        } catch (Exception $e) {
+            //dd($e->getMessage());
+            return $this->json(["error" => "JSON non valide:".$e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
-
-
+        
         // Validate the post
         $errors = $validator->validate($post);
         if (count($errors) > 0) {
@@ -188,7 +190,7 @@ class PostController extends AbstractController
         $post->setSlug($post->getSlug());
         $post->setUpdatedAt(new \DateTime('now'));
         $post->setUser($this->security->getUser());
-
+        
         $entityManager->flush();
 
         return $this->json(
