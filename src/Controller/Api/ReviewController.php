@@ -110,7 +110,7 @@ class ReviewController extends AbstractController
         }
         //dd($userTaker);
         // Returns a Json with first argument data and 2nd argument the status code
-        return $this->json(compact("reviewByUserId","userGiver","userTaker"),Response::HTTP_OK,[],["groups" => "reviews"]);
+        return $this->json(compact("reviewByUserId","userGiver"),Response::HTTP_OK,[],["groups" => "reviews"]);
     }
 
 }
