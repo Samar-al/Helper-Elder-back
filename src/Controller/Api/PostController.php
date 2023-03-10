@@ -44,7 +44,7 @@ class PostController extends AbstractController
     {
         $users = $userRepository->findBy(['type'=>2]);
         if(!$users){
-            return $this->json(["error" => "Il n'y àDaily pas d'utilisateur Helpers pour le moment"],Response::HTTP_NOT_FOUND);
+            return $this->json(["error" => "Il n'y à pas d'utilisateur Helpers pour le moment"],Response::HTTP_NOT_FOUND);
         }
         $posts = [];
         foreach($users as $user){

@@ -19,7 +19,7 @@ class ConversationController extends AbstractController
 {
     
     
-    /**
+   /**
      * @Route("api/mon-profil/conversation", name="app_api_conversation_list", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
@@ -32,16 +32,21 @@ class ConversationController extends AbstractController
         $latestMessage = [];
         foreach($conversations as $conversation){
 
-           $user1 = $userRepository->find($conversation["user1_id"]);
-           $users[] = $user1;
+           $user1 = $userRepository->find($conversation["user1_id"]);     
            $user2 = $userRepository->find($conversation["user2_id"]);
-           $users[] = $user2;
+           
+           if($user1 !== $this->getUser()){
+            $users[]=$user1;
+           }
+           if($user2 !== $this->getUser()){
+            $users[]=$user2;
+           }
+
 
            $message = $messageRepository->findLastMessageByConversationId($conversation["id"]);
            $latestMessage[] = $message;
         }
       
-        
         return $this->json([$conversations, $users, $latestMessage], Response::HTTP_OK,[], ["groups" => "conversations"]); 
     
     }

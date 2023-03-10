@@ -49,7 +49,7 @@ class MessageRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-    
+
 //    /**
 //     * @return Message[] Returns an array of Message objects
 //     */
