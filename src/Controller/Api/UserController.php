@@ -192,9 +192,9 @@ class UserController extends AbstractController
      * @IsGranted("ROLE_USER")
      * Present one user
      */
-    public function getUserById(User $user): JsonResponse
+    public function getUserById(User $user, ReviewRepository $reviewRepository): JsonResponse
     {
-    
+       
         // Return a Json with data and status code
          return $this->json($user,Response::HTTP_OK,[],["groups" => "users"]);   
     }

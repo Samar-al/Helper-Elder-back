@@ -91,14 +91,26 @@ class ReviewController extends AbstractController
     } 
 
      /**
-     * @Route("/api/avis/{id}", name="app_api_review_getOneById", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("/api/avis-par-utilisateur/{id}", name="app_api_review_getOneById", methods={"GET"}, requirements={"id"="\d+"})
      * @IsGranted("ROLE_USER")
      */
-    public function getOne(Review $review): Response
+    public function getOne(ReviewRepository $reviewRepository, int $id, UserRepository $userRepository): Response
     {
 
+        $reviewByUserId = $reviewRepository->findReviewByUserId($id);
+       // dd($reviewByUserId);
+        $userGiver = [];
+        $userTaker = [];
+        foreach($reviewByUserId as $user){
+            $userGiver[]=$userRepository->find($user["user_giver_id"]);
+        }
+        //dd($userGiver);
+        foreach($reviewByUserId as $user){
+            $userTaker[]=$userRepository->find($user["user_taker_id"]);
+        }
+        //dd($userTaker);
         // Returns a Json with first argument data and 2nd argument the status code
-        return $this->json($review,Response::HTTP_OK,[],["groups" => "reviews"]);
+        return $this->json(compact("reviewByUserId","userGiver","userTaker"),Response::HTTP_OK,[],["groups" => "reviews"]);
     }
 
 }
