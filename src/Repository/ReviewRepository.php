@@ -40,12 +40,11 @@ class ReviewRepository extends ServiceEntityRepository
     }
 
 
-    public function findReviewByUserId($id){
+    public function findReviewByUserTakerId($id){
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
             SELECT review.* FROM review 
-            WHERE review.user_giver_id =' .$id.' 
-            OR  review.user_taker_id =' .$id.''
+            WHERE review.user_taker_id =' .$id.''
         ;
         
         $stmt = $conn->prepare($sql);

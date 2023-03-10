@@ -97,7 +97,7 @@ class ReviewController extends AbstractController
     public function getOne(ReviewRepository $reviewRepository, int $id, UserRepository $userRepository): Response
     {
 
-        $reviewByUserId = $reviewRepository->findReviewByUserId($id);
+        $reviewByUserId = $reviewRepository->findReviewByUserTakerId($id);
        // dd($reviewByUserId);
         $userGiver = [];
         $userTaker = [];
@@ -105,9 +105,9 @@ class ReviewController extends AbstractController
             $userGiver[]=$userRepository->find($user["user_giver_id"]);
         }
         //dd($userGiver);
-        foreach($reviewByUserId as $user){
-            $userTaker[]=$userRepository->find($user["user_taker_id"]);
-        }
+        // foreach($reviewByUserId as $user){
+        //     $userTaker[]=$userRepository->find($user["user_taker_id"]);
+        // }
         //dd($userTaker);
         // Returns a Json with first argument data and 2nd argument the status code
         return $this->json(compact("reviewByUserId","userGiver"),Response::HTTP_OK,[],["groups" => "reviews"]);
