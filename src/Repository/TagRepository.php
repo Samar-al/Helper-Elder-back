@@ -39,6 +39,24 @@ class TagRepository extends ServiceEntityRepository
         }
     }
 
+    public function searchTags($query){
+        
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT tag.* FROM tag 
+            WHERE tag.name LIKE \'%' . $query . '%\'
+           '
+        ;
+        
+        $stmt = $conn->prepare($sql);
+        
+        $resultSet = $stmt->executeQuery();
+
+        // returns the result
+        return $resultSet->fetchAllAssociative();
+    }
+
+
 //    /**
 //     * @return Tag[] Returns an array of Tag objects
 //     */

@@ -5,6 +5,8 @@ namespace App\Controller\Back;
 use App\Entity\Post;
 use App\Form\Post1Type;
 use App\Repository\PostRepository;
+use App\Repository\TagRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,20 +46,31 @@ class PostController extends AbstractController
             'posts' => $postRepository->findAll(),
         ]);
     }
-
-     /**
-     * @Route("/recherche-titre", name="app_back_post_list")
+ 
+    /**
+     * @Route("/search", name="post_search")
      */
-    public function list(PostRepository $postRepository, Request $request, HttpClientInterface $client): Response
+    public function search(Request $request, PostRepository $postRepository, UserRepository $userRepository, TagRepository $tagRepository)
     {
-
+        $query = $request->query->get('query');
         
-        $posts = $postRepository->findAllOrderByTitleSearch($request->get("search"));
+        // Search for posts that match the query
+        $posts = $postRepository->searchPosts($query);
+      
+        // Search for users that match the query
+        $users = $userRepository->searchUsers($query);
 
-        return $this->render('back/post/index.html.twig', [
+        // Search for tags that match the query
+        $tags = $tagRepository->searchTags($query);
+
+        return $this->render('base.html.twig', [
+            'query' => $query,
             'posts' => $posts,
+            'users' => $users,
+            'tags' => $tags,
         ]);
     }
+
 
     /**
      * @Route("/annonce/ajouter", name="app_back_post_new", methods={"GET", "POST"})
