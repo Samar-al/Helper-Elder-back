@@ -55,6 +55,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $this->add($user, true);
     }
+    
+    public function searchUsers($query){
+        
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = '
+            SELECT user.* FROM user 
+            WHERE user.firstname LIKE \'%' . $query . '%\'
+            OR user.lastname LIKE \'%' . $query . '%\''
+        ;
+        
+        $stmt = $conn->prepare($sql);
+        
+        $resultSet = $stmt->executeQuery();
+
+        // returns the result
+        return $resultSet->fetchAllAssociative();
+    }
 
     
 

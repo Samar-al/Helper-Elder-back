@@ -38,21 +38,48 @@
                 <a class="nav-link {% if "tag" in app.request.get("{{path('app_logout')}}") %} active {% endif %}" href="{{path('app_logout')}}">Déconnexion</a>
                 </li>
             </ul>
-            <form class="d-flex" action="#">
-                <input class="form-control me-sm-2" type="search" placeholder="Recherche">
+            <form class="d-flex" action="{{ path('post_search') }}" method="GET">
+                <input class="form-control me-sm-2" type="search" placeholder="Recherche" name="query">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Trouver</button>
             </form>
         </div>
     </div>
     </nav>    
         {% block body %}
+          <h1>Search Results</h1>
+        {% if posts is not empty %}
+            <h2>Posts</h2>
+            <ul>
+                {% for post in posts %}
+                    <li><a href="{{ path('app_back_post_show', {'id': post.id}) }}">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if users is not empty %}
+            <h2>Users</h2>
+            <ul>
+                {% for user in users %}
+                    <li><a href="{{ path('app_back_user_show', {'id': user.id}) }}">{{ user.lastname }} {{user.firstname}}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if tags is not empty %}
+            <h2>Tags</h2>
+            <ul>
+                {% for tag in tags %}
+                    <li><a href="{{ path('app_back_tag_show', {'id': tag.id}) }}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+
+
         
+            
 
-
-   
-    
-
-    
+            
         {% endblock %}
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
