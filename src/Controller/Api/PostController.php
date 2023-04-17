@@ -98,7 +98,7 @@ class PostController extends AbstractController
 
      /**
      * @Route("/api/annonce/ajouter", name="app_api_post_add", methods={"POST"})
-     * 
+     * @IsGranted("ROLE_USER")
      */
     public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, PostRepository $postRepository): Response
     {

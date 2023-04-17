@@ -46,5 +46,5 @@ class PostVoter extends Voter
     {
         //if the user is the user who add the post, he can edit and delete this one
         return $user === $post->getUser();
-        }
+    }
 }
